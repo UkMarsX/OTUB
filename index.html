@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>EMGRISAC - Optimizador de Cortes</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background: #f4f4f4;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .contenedor {
+      display: grid;
+      grid-template-columns: 350px 1fr;
+      gap: 20px;
+    }
+
+    .panel {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 0 8px #ccc;
+    }
+
+    input, textarea, button {
+      width: 100%;
+      margin-top: 8px;
+      margin-bottom: 15px;
+      padding: 8px;
+      font-size: 15px;
+    }
+
+    button {
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    #resultado {
+      white-space: pre-wrap;
+      background: #eee;
+      padding: 10px;
+      max-height: 300px;
+      overflow-y: auto;
+      border-radius: 6px;
+    }
+
+    #grafico {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 20px;
+      overflow-y: auto;
+      max-height: 650px;
+      box-shadow: 0 0 8px #ccc;
+    }
+
+    .tubo {
+      margin-bottom: 18px;
+    }
+
+    .titulo-tubo {
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    .barra {
+      display: flex;
+      height: 42px;
+      border: 2px solid #333;
+      width: 100%;
+    }
+
+    .segmento {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      border-right: 1px solid #333;
+      box-sizing: border-box;
+      color: #111;
+      font-weight: bold;
+    }
+
+    .desperdicio {
+      background: red;
+      color: white;
+    }
+
+    .leyenda {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .item-leyenda {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: #eee;
+      padding: 5px 8px;
+      border-radius: 5px;
+    }
+
+    .color-box {
+      width: 20px;
+      height: 20px;
+      border: 1px solid #333;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Optimizador de Cortes de Tubo</h1>
+
+  <div class="contenedor">
+    <div class="panel">
+      <label>Largo total del tubo:</label>
+      <input id="largoTotal" type="number" step="0.01" value="6">
+
+      <label>Cortes:</label>
+      <textarea id="entradaCortes" rows="12" placeholder="Ejemplo:
+1.20 5
+0.80 3
+2.50 2"></textarea>
+
+      <button onclick="calcular()">Calcular</button>
+
+      <p><b>Formato:</b> medida cantidad</p>
+      <p>Ejemplo: <code>1.20 5</code></p>
+    </div>
+
+    <div class="panel">
+      <h2>Resultados</h2>
+      <div id="resultado"></div>
+    </div>
+  </div>
+
+  <div id="grafico">
+    <h2>Gráfico de tubos</h2>
+    <div id="tubos"></div>
+    <div class="leyenda" id="leyenda"></div>
+  </div>
+
+  <script>
+    function optimizarCortes(largoTotal, cortes) {
+      cortes.sort((a, b) => b.medida - a.medida);
+
+      let tubos = [];
+
+      for (let corte of cortes) {
+        for (let i = 0; i < corte.cantidad; i++) {
+          let agregado = false;
+
+          for (let tubo of tubos) {
+            if (tubo.espacioDisponible >= corte.medida) {
+              tubo.cortes.push(corte.medida);
+              tubo.espacioDisponible -= corte.medida;
+              agregado = true;
+              break;
+            }
+          }
+
+          if (!agregado) {
+            tubos.push({
+              cortes: [corte.medida],
+              espacioDisponible: largoTotal - corte.medida
+            });
+          }
+        }
+      }
+
+      return tubos;
+    }
+
+    function obtenerColorPorMedida(medidas) {
+      const coloresBase = [
+        "#60a5fa", "#34d399", "#facc15", "#c084fc",
+        "#fb923c", "#22d3ee", "#a3e635", "#f472b6",
+        "#fde68a", "#93c5fd", "#86efac", "#d8b4fe"
+      ];
+
+      let colores = {};
+      let index = 0;
+
+      for (let medida of medidas) {
+        colores[medida] = coloresBase[index % coloresBase.length];
+        index++;
+      }
+
+      return colores;
+    }
+
+    function calcular() {
+      const largoTotal = parseFloat(document.getElementById("largoTotal").value);
+      const texto = document.getElementById("entradaCortes").value.trim();
+
+      if (!texto) {
+        alert("Ingresa cortes primero.");
+        return;
+      }
+
+      let cortes = [];
+
+      try {
+        const lineas = texto.split("\n");
+
+        for (let linea of lineas) {
+          const partes = linea.trim().split(/\s+/);
+          const medida = parseFloat(partes[0]);
+          const cantidad = parseInt(partes[1]);
+
+          if (isNaN(medida) || isNaN(cantidad)) {
+            throw new Error();
+          }
+
+          cortes.push({ medida, cantidad });
+        }
+      } catch {
+        alert("Formato incorrecto. Usa: medida cantidad");
+        return;
+      }
+
+      const tubos = optimizarCortes(largoTotal, cortes);
+
+      mostrarResultados(tubos);
+      dibujarTubos(tubos, largoTotal, cortes);
+    }
+
+    function mostrarResultados(tubos) {
+      let texto = "";
+      let desperdicioTotal = 0;
+
+      tubos.forEach((tubo, index) => {
+        desperdicioTotal += tubo.espacioDisponible;
+
+        texto += `Tubo ${index + 1}: Cortes = ${tubo.cortes.join(", ")} m | Desperdicio = ${tubo.espacioDisponible.toFixed(2)} m\n`;
+      });
+
+      texto += `\nDesperdicio total: ${desperdicioTotal.toFixed(2)} m`;
+
+      document.getElementById("resultado").textContent = texto;
+    }
+
+    function dibujarTubos(tubos, largoTotal, cortesOriginales) {
+      const contenedor = document.getElementById("tubos");
+      const leyenda = document.getElementById("leyenda");
+
+      contenedor.innerHTML = "";
+      leyenda.innerHTML = "";
+
+      const medidasUnicas = [...new Set(cortesOriginales.map(c => c.medida))];
+      const colores = obtenerColorPorMedida(medidasUnicas);
+
+      tubos.forEach((tubo, index) => {
+        const divTubo = document.createElement("div");
+        divTubo.className = "tubo";
+
+        const titulo = document.createElement("div");
+        titulo.className = "titulo-tubo";
+        titulo.textContent = `Tubo ${index + 1}`;
+
+        const barra = document.createElement("div");
+        barra.className = "barra";
+
+        tubo.cortes.forEach(corte => {
+          const segmento = document.createElement("div");
+          segmento.className = "segmento";
+          segmento.style.width = `${(corte / largoTotal) * 100}%`;
+          segmento.style.background = colores[corte];
+          segmento.textContent = `${corte} m`;
+
+          barra.appendChild(segmento);
+        });
+
+        if (tubo.espacioDisponible > 0) {
+          const desperdicio = document.createElement("div");
+          desperdicio.className = "segmento desperdicio";
+          desperdicio.style.width = `${(tubo.espacioDisponible / largoTotal) * 100}%`;
+          desperdicio.textContent = `${tubo.espacioDisponible.toFixed(2)} m`;
+
+          barra.appendChild(desperdicio);
+        }
+
+        divTubo.appendChild(titulo);
+        divTubo.appendChild(barra);
+        contenedor.appendChild(divTubo);
+      });
+
+      medidasUnicas.forEach(medida => {
+        const item = document.createElement("div");
+        item.className = "item-leyenda";
+
+        const colorBox = document.createElement("div");
+        colorBox.className = "color-box";
+        colorBox.style.background = colores[medida];
+
+        const texto = document.createElement("span");
+        texto.textContent = `${medida} m`;
+
+        item.appendChild(colorBox);
+        item.appendChild(texto);
+        leyenda.appendChild(item);
+      });
+
+      const itemDesperdicio = document.createElement("div");
+      itemDesperdicio.className = "item-leyenda";
+
+      const rojo = document.createElement("div");
+      rojo.className = "color-box";
+      rojo.style.background = "red";
+
+      const textoRojo = document.createElement("span");
+      textoRojo.textContent = "Desperdicio";
+
+      itemDesperdicio.appendChild(rojo);
+      itemDesperdicio.appendChild(textoRojo);
+      leyenda.appendChild(itemDesperdicio);
+    }
+  </script>
+
+</body>
+</html>
