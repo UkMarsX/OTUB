@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculadora de Pintura EMGRISAC</title>
+  <style>
+    :root{
+      --azul:#0f3d5e;
+      --azul2:#14537e;
+      --celeste:#e9f4fb;
+      --gris:#f4f6f8;
+      --texto:#1f2933;
+      --borde:#d7dee6;
+      --verde:#1f7a4d;
+      --rojo:#c0392b;
+      --sombra:0 10px 25px rgba(0,0,0,.08);
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
+      background:linear-gradient(135deg,#eef5f9,#ffffff);
+      color:var(--texto);
+    }
+
+    .app{
+      max-width:1200px;
+      margin:0 auto;
+      padding:24px;
+    }
+
+    header{
+      background:linear-gradient(135deg,var(--azul),var(--azul2));
+      color:white;
+      padding:24px;
+      border-radius:18px;
+      box-shadow:var(--sombra);
+      display:flex;
+      justify-content:space-between;
+      gap:20px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
+    header h1{margin:0;font-size:28px;letter-spacing:.3px}
+    header p{margin:8px 0 0;color:#d8edf8;font-size:15px}
+
+    .badge{
+      background:white;
+      color:var(--azul);
+      padding:10px 14px;
+      border-radius:999px;
+      font-weight:bold;
+      font-size:14px;
+    }
+
+    .panel{
+      margin-top:20px;
+      background:white;
+      border:1px solid var(--borde);
+      border-radius:18px;
+      box-shadow:var(--sombra);
+      padding:20px;
+    }
+
+    .config{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:14px;
+      margin-bottom:18px;
+    }
+
+    label{
+      display:block;
+      font-size:12px;
+      font-weight:bold;
+      color:#52606d;
+      margin-bottom:6px;
+      text-transform:uppercase;
+      letter-spacing:.4px;
+    }
+
+    input,select{
+      width:100%;
+      padding:11px 10px;
+      border:1px solid var(--borde);
+      border-radius:10px;
+      font-size:14px;
+      background:white;
+      outline:none;
+    }
+
+    input:focus,select:focus{border-color:var(--azul2);box-shadow:0 0 0 3px rgba(20,83,126,.12)}
+
+    .table-wrap{overflow-x:auto;border:1px solid var(--borde);border-radius:14px}
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      min-width:1050px;
+      background:white;
+    }
+
+    th{
+      background:var(--celeste);
+      color:var(--azul);
+      text-align:left;
+      padding:10px;
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.3px;
+      border-bottom:1px solid var(--borde);
+    }
+
+    td{
+      padding:9px;
+      border-bottom:1px solid #edf1f5;
+      vertical-align:middle;
+    }
+
+    td input,td select{padding:9px;font-size:13px}
+
+    .readonly{
+      background:#f8fafc;
+      font-weight:bold;
+      color:#243b53;
+    }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:16px;
+    }
+
+    button{
+      border:0;
+      padding:12px 16px;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:bold;
+      font-size:14px;
+      transition:.15s;
+    }
+
+    button:hover{transform:translateY(-1px);filter:brightness(.98)}
+
+    .btn-primary{background:var(--azul);color:white}
+    .btn-light{background:#e8eef3;color:#243b53}
+    .btn-danger{background:#fdecea;color:var(--rojo)}
+    .btn-green{background:var(--verde);color:white}
+
+    .delete-btn{
+      background:#fff1f0;
+      color:var(--rojo);
+      padding:8px 10px;
+      border-radius:9px;
+    }
+
+    .resumen{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:14px;
+      margin-top:18px;
+    }
+
+    .card{
+      background:#f8fafc;
+      border:1px solid var(--borde);
+      border-radius:16px;
+      padding:16px;
+    }
+
+    .card span{
+      display:block;
+      font-size:12px;
+      font-weight:bold;
+      color:#52606d;
+      text-transform:uppercase;
+      letter-spacing:.4px;
+      margin-bottom:8px;
+    }
+
+    .card strong{
+      font-size:24px;
+      color:var(--azul);
+    }
+
+    .nota{
+      margin-top:14px;
+      padding:14px;
+      background:#fff8e6;
+      border:1px solid #ffe0a3;
+      border-radius:14px;
+      color:#634000;
+      font-size:14px;
+      line-height:1.45;
+    }
+
+    .mini{font-size:12px;color:#627d98;margin-top:6px;line-height:1.35}
+
+    @media(max-width:900px){
+      .config,.resumen{grid-template-columns:1fr 1fr}
+      header h1{font-size:23px}
+    }
+
+    @media(max-width:600px){
+      .app{padding:14px}
+      .config,.resumen{grid-template-columns:1fr}
+      header{padding:18px}
+    }
+
+    @media print{
+      body{background:white}
+      .actions,.delete-btn{display:none}
+      .panel,header{box-shadow:none}
+      table{min-width:100%}
+      input,select{border:0;padding:0;background:transparent}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div>
+        <h1>Calculadora de Pintura EMGRISAC</h1>
+        <p>Calcula área superficial, litros de zincromato/base y cantidad sugerida a comprar.</p>
+      </div>
+      <div class="badge">Portal Técnico</div>
+    </header>
+
+    <section class="panel">
+      <div class="config">
+        <div>
+          <label>Rendimiento pintura</label>
+          <input id="rendimiento" type="number" value="8" step="0.1" min="0.1" oninput="calcular()">
+          <div class="mini">m²/L por mano. Zincromato sugerido: 8.</div>
+        </div>
+        <div>
+          <label>Número de manos</label>
+          <input id="manos" type="number" value="1" step="1" min="1" oninput="calcular()">
+          <div class="mini">Valor por defecto: 1 mano.</div>
+        </div>
+        <div>
+          <label>Pérdida / merma</label>
+          <input id="perdida" type="number" value="15" step="1" min="0" oninput="calcular()">
+          <div class="mini">Sugerido realista en taller: 15%.</div>
+        </div>
+        <div>
+          <label>Presentación comercial</label>
+          <input id="presentacion" type="number" value="1" step="0.1" min="0.1" oninput="calcular()">
+          <div class="mini">Ejemplo: 1 L, 4 L, 18 L, etc.</div>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table id="tabla">
+          <thead>
+            <tr>
+              <th>Perfil</th>
+              <th>Medida A mm</th>
+              <th>Medida B mm</th>
+              <th>Longitud m</th>
+              <th>Cantidad</th>
+              <th>Perímetro m</th>
+              <th>Área unidad m²</th>
+              <th>Área total m²</th>
+              <th>Eliminar</th>
+            </tr>
+          </thead>
+          <tbody id="cuerpo"></tbody>
+        </table>
+      </div>
+
+      <div class="actions">
+        <button class="btn-primary" onclick="agregarFila()">+ Agregar perfil</button>
+        <button class="btn-light" onclick="cargarEjemplo()">Cargar ejemplo</button>
+        <button class="btn-green" onclick="window.print()">Imprimir / Guardar PDF</button>
+        <button class="btn-danger" onclick="limpiarTodo()">Limpiar todo</button>
+      </div>
+
+      <div class="resumen">
+        <div class="card">
+          <span>Área total</span>
+          <strong id="areaTotal">0.00 m²</strong>
+        </div>
+        <div class="card">
+          <span>Litros sin pérdida</span>
+          <strong id="litrosSin">0.00 L</strong>
+        </div>
+        <div class="card">
+          <span>Litros con pérdida</span>
+          <strong id="litrosCon">0.00 L</strong>
+        </div>
+        <div class="card">
+          <span>Comprar aprox.</span>
+          <strong id="comprar">0 env.</strong>
+        </div>
+      </div>
+
+      <div class="nota">
+        <b>Nota:</b> Esta calculadora usa superficie exterior aproximada. Para perfiles abiertos como ángulo L o canal U, se considera ambas caras principales de las alas/alma, aproximando el espesor como parte de la superficie desarrollada. Para cotizaciones rápidas de taller es bastante útil.
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const cuerpo = document.getElementById('cuerpo');
+
+    function crearSelect(valor='tubo_cuadrado'){
+      return `
+        <select onchange="actualizarCampos(this); calcular();">
+          <option value="tubo_cuadrado" ${valor==='tubo_cuadrado'?'selected':''}>Tubo cuadrado</option>
+          <option value="tubo_rectangular" ${valor==='tubo_rectangular'?'selected':''}>Tubo rectangular</option>
+          <option value="tubo_redondo" ${valor==='tubo_redondo'?'selected':''}>Tubo redondo</option>
+          <option value="barra_redonda" ${valor==='barra_redonda'?'selected':''}>Barra redonda</option>
+          <option value="angulo_l" ${valor==='angulo_l'?'selected':''}>Ángulo L lados iguales</option>
+          <option value="plancha" ${valor==='plancha'?'selected':''}>Plancha / placa</option>
+          <option value="canal_u" ${valor==='canal_u'?'selected':''}>Canal U aproximado</option>
+        </select>`;
+    }
+
+    function agregarFila(datos={}){
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${crearSelect(datos.tipo || 'tubo_cuadrado')}</td>
+        <td><input type="number" value="${datos.a ?? 50}" step="0.1" min="0" oninput="calcular()"></td>
+        <td><input type="number" value="${datos.b ?? 50}" step="0.1" min="0" oninput="calcular()"></td>
+        <td><input type="number" value="${datos.largo ?? 6}" step="0.01" min="0" oninput="calcular()"></td>
+        <td><input type="number" value="${datos.cantidad ?? 1}" step="1" min="0" oninput="calcular()"></td>
+        <td><input class="readonly" readonly></td>
+        <td><input class="readonly" readonly></td>
+        <td><input class="readonly" readonly></td>
+        <td><button class="delete-btn" onclick="this.closest('tr').remove(); calcular();">X</button></td>
+      `;
+      cuerpo.appendChild(tr);
+      actualizarCampos(tr.querySelector('select'));
+      calcular();
+    }
+
+    function actualizarCampos(select){
+      const tr = select.closest('tr');
+      const a = tr.children[1].querySelector('input');
+      const b = tr.children[2].querySelector('input');
+      const tipo = select.value;
+
+      if(tipo === 'tubo_cuadrado'){
+        a.placeholder = 'Lado'; b.placeholder = 'Lado'; b.disabled = true; b.value = a.value;
+      } else if(tipo === 'tubo_redondo' || tipo === 'barra_redonda'){
+        a.placeholder = 'Diámetro'; b.placeholder = '-'; b.disabled = true; b.value = '';
+      } else if(tipo === 'angulo_l'){
+        a.placeholder = 'Lado'; b.placeholder = 'Espesor'; b.disabled = false;
+      } else if(tipo === 'plancha'){
+        a.placeholder = 'Ancho'; b.placeholder = 'Largo placa'; b.disabled = false;
+      } else if(tipo === 'canal_u'){
+        a.placeholder = 'Alma'; b.placeholder = 'Ala'; b.disabled = false;
+      } else {
+        a.placeholder = 'Ancho'; b.placeholder = 'Alto'; b.disabled = false;
+      }
+    }
+
+    function perimetroPerfil(tipo, aMm, bMm){
+      const a = Number(aMm) / 1000;
+      const b = Number(bMm) / 1000;
+
+      if(tipo === 'tubo_cuadrado') return 4 * a;
+      if(tipo === 'tubo_rectangular') return 2 * (a + b);
+      if(tipo === 'tubo_redondo' || tipo === 'barra_redonda') return Math.PI * a;
+      if(tipo === 'angulo_l') return 4 * a; 
+      if(tipo === 'canal_u') return 2 * a + 4 * b;
+      return 0;
+    }
+
+    function calcular(){
+      let areaTotal = 0;
+
+      [...cuerpo.querySelectorAll('tr')].forEach(tr => {
+        const tipo = tr.children[0].querySelector('select').value;
+        const aInput = tr.children[1].querySelector('input');
+        const bInput = tr.children[2].querySelector('input');
+        const largo = Number(tr.children[3].querySelector('input').value) || 0;
+        const cantidad = Number(tr.children[4].querySelector('input').value) || 0;
+
+        if(tipo === 'tubo_cuadrado') bInput.value = aInput.value;
+
+        const a = Number(aInput.value) || 0;
+        const b = Number(bInput.value) || 0;
+
+        let perimetro = 0;
+        let areaUnidad = 0;
+
+        if(tipo === 'plancha'){
+          const ancho = a / 1000;
+          const largoPlaca = b / 1000;
+          areaUnidad = 2 * ancho * largoPlaca;
+          perimetro = 0;
+        } else {
+          perimetro = perimetroPerfil(tipo, a, b);
+          areaUnidad = perimetro * largo;
+        }
+
+        const areaFila = areaUnidad * cantidad;
+        areaTotal += areaFila;
+
+        tr.children[5].querySelector('input').value = perimetro ? perimetro.toFixed(3) : '-';
+        tr.children[6].querySelector('input').value = areaUnidad.toFixed(3);
+        tr.children[7].querySelector('input').value = areaFila.toFixed(3);
+      });
+
+      const rendimiento = Number(document.getElementById('rendimiento').value) || 1;
+      const manos = Number(document.getElementById('manos').value) || 1;
+      const perdida = Number(document.getElementById('perdida').value) || 0;
+      const presentacion = Number(document.getElementById('presentacion').value) || 1;
+
+      const litrosSin = (areaTotal / rendimiento) * manos;
+      const litrosCon = litrosSin * (1 + perdida / 100);
+      const envases = Math.ceil(litrosCon / presentacion);
+
+      document.getElementById('areaTotal').textContent = areaTotal.toFixed(2) + ' m²';
+      document.getElementById('litrosSin').textContent = litrosSin.toFixed(2) + ' L';
+      document.getElementById('litrosCon').textContent = litrosCon.toFixed(2) + ' L';
+      document.getElementById('comprar').textContent = envases + ' env.';
+    }
+
+    function limpiarTodo(){
+      cuerpo.innerHTML = '';
+      calcular();
+    }
+
+    function cargarEjemplo(){
+      cuerpo.innerHTML = '';
+      agregarFila({tipo:'tubo_cuadrado', a:100, b:100, largo:6, cantidad:10});
+      agregarFila({tipo:'tubo_cuadrado', a:50, b:50, largo:6, cantidad:23});
+      calcular();
+    }
+
+    agregarFila({tipo:'tubo_cuadrado', a:100, b:100, largo:6, cantidad:10});
+  </script>
+</body>
+</html>
