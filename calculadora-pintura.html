@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Calculadora de Pintura EMGRISAC</title>
+  <title>Calculadora de Pintura EMGRISAC - v2 galones</title>
   <style>
     :root{
       --azul:#0f3d5e;
@@ -227,17 +227,17 @@
     <header>
       <div>
         <h1>Calculadora de Pintura EMGRISAC</h1>
-        <p>Calcula área superficial, litros de zincromato/base y cantidad sugerida a comprar.</p>
+        <p>Calcula área superficial, galones de zincromato/base y cantidad sugerida a comprar.</p>
       </div>
-      <div class="badge">Portal Técnico</div>
+      <div class="badge">Portal Técnico · v2 galones</div>
     </header>
 
     <section class="panel">
       <div class="config">
         <div>
           <label>Rendimiento pintura</label>
-          <input id="rendimiento" type="number" value="8" step="0.1" min="0.1" oninput="calcular()">
-          <div class="mini">m²/L por mano. Zincromato sugerido: 8.</div>
+          <input id="rendimiento" type="number" value="30" step="0.1" min="0.1" oninput="calcular()">
+          <div class="mini">m²/galón por mano. Zincromato sugerido: 30.</div>
         </div>
         <div>
           <label>Número de manos</label>
@@ -251,8 +251,8 @@
         </div>
         <div>
           <label>Presentación comercial</label>
-          <input id="presentacion" type="number" value="3.785" step="0.1" min="0.1" oninput="calcular()">
-          <div class="mini">Ejemplo: 1 L, 4 L, 18 L, etc.</div>
+          <input id="presentacion" type="number" value="1" step="0.1" min="0.1" oninput="calcular()">
+          <div class="mini">En galones. Ejemplo: 1 gal, 5 gal. 1 gal = 3.785 L.</div>
         </div>
       </div>
 
@@ -288,16 +288,28 @@
           <strong id="areaTotal">0.00 m²</strong>
         </div>
         <div class="card">
-          <span>Litros sin pérdida</span>
-          <strong id="litrosSin">0.00 L</strong>
+          <span>Galones sin pérdida</span>
+          <strong id="galonesSin">0.00 gal</strong>
         </div>
         <div class="card">
-          <span>Litros con pérdida</span>
-          <strong id="litrosCon">0.00 L</strong>
+          <span>Galones con pérdida</span>
+          <strong id="galonesCon">0.00 gal</strong>
+        </div>
+        <div class="card">
+          <span>Litros necesarios</span>
+          <strong id="litrosNecesarios">0.00 L</strong>
         </div>
         <div class="card">
           <span>Comprar aprox.</span>
-          <strong id="comprar">0 env.</strong>
+          <strong id="comprar">0 gal</strong>
+        </div>
+        <div class="card">
+          <span>Compra equivalente en litros</span>
+          <strong id="litrosEquiv">0.00 L</strong>
+        </div>
+        <div class="card">
+          <span>Sobrante aprox.</span>
+          <strong id="sobrante">0.00 gal / 0.00 L</strong>
         </div>
       </div>
 
@@ -415,14 +427,22 @@
       const perdida = Number(document.getElementById('perdida').value) || 0;
       const presentacion = Number(document.getElementById('presentacion').value) || 1;
 
-      const litrosSin = (areaTotal / rendimiento) * manos;
-      const litrosCon = litrosSin * (1 + perdida / 100);
-      const envases = Math.ceil(litrosCon / presentacion);
+      const galonesSin = (areaTotal / rendimiento) * manos;
+      const galonesCon = galonesSin * (1 + perdida / 100);
+      const envases = Math.ceil(galonesCon / presentacion);
+      const galonesComprar = envases * presentacion;
+      const sobranteGal = Math.max(0, galonesComprar - galonesCon);
+      const litrosNecesarios = galonesCon * 3.78541;
+      const litrosEquiv = galonesComprar * 3.78541;
+      const sobranteLitros = sobranteGal * 3.78541;
 
       document.getElementById('areaTotal').textContent = areaTotal.toFixed(2) + ' m²';
-      document.getElementById('litrosSin').textContent = litrosSin.toFixed(2) + ' L';
-      document.getElementById('litrosCon').textContent = litrosCon.toFixed(2) + ' L';
-      document.getElementById('comprar').textContent = envases + ' env.';
+      document.getElementById('galonesSin').textContent = galonesSin.toFixed(2) + ' gal';
+      document.getElementById('galonesCon').textContent = galonesCon.toFixed(2) + ' gal';
+      document.getElementById('litrosNecesarios').textContent = litrosNecesarios.toFixed(2) + ' L';
+      document.getElementById('comprar').textContent = galonesComprar.toFixed(2) + ' gal (' + envases + ' env.)';
+      document.getElementById('litrosEquiv').textContent = litrosEquiv.toFixed(2) + ' L';
+      document.getElementById('sobrante').textContent = sobranteGal.toFixed(2) + ' gal / ' + sobranteLitros.toFixed(2) + ' L';
     }
 
     function limpiarTodo(){
