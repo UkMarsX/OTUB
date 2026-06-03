@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Plantillas Boca de Pez V5</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+@page { size: A4 landscape; margin: 10mm; }
+
+:root{ --azul:#1f4e79; --fondo:#eef1f5; }
+
+body{
+  font-family: Arial, sans-serif;
+  background:var(--fondo);
+  margin:20px;
+  color:#111;
+}
+
+.app{
+  background:white;
+  max-width:1200px;
+  margin:auto;
+  padding:20px;
+  border-radius:14px;
+}
+
+h1{margin-bottom:4px;}
+p{margin-top:4px;}
+
+.controls{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:14px;
+  margin-top:15px;
+}
+
+label{font-weight:bold;font-size:14px;}
+
+input{
+  padding:8px;
+  font-size:15px;
+  margin-top:5px;
+  width:115px;
+}
+
+button{
+  padding:10px 14px;
+  font-size:15px;
+  cursor:pointer;
+  margin-right:8px;
+  margin-top:15px;
+}
+
+.card{
+  background:#f8f9fb;
+  border-left:5px solid var(--azul);
+  padding:12px;
+  margin-top:15px;
+}
+
+.page{
+  background:white;
+  width:277mm;
+  min-height:190mm;
+  margin:20px auto;
+  border:1px solid #aaa;
+  overflow:hidden;
+  page-break-after:always;
+}
+
+svg{
+  width:277mm;
+  height:190mm;
+}
+
+.preview3d{
+  width:100%;
+  height:430px;
+  background:#111;
+  margin-top:25px;
+  border-radius:10px;
+  overflow:hidden;
+}
+
+.section-title{
+  margin-top:25px;
+  padding-top:10px;
+  border-top:2px solid #ddd;
+}
+
+.small{font-size:13px;color:#555;}
+
+@media print{
+  body{margin:0;background:white;}
+  .no-print,.card,.preview3d,.section-title{display:none;}
+  .app{padding:0;max-width:none;}
+  .page{margin:0;border:none;}
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+  <div class="no-print">
+    <h1>Plantillas Boca de Pez V5</h1>
+    <p>Desarrollo para tubo circular intersectando tubo circular.</p>
+
+    <div class="controls">
+      <div>
+        <label>Diámetro tubo principal D1</label><br>
+        <input id="d1" type="number" value="101.6" step="0.1"> mm
+      </div>
+
+      <div>
+        <label>Diámetro tubo que llega D2</label><br>
+        <input id="d2" type="number" value="50.8" step="0.1"> mm
+      </div>
+
+      <div>
+        <label>Espesor tubo que llega</label><br>
+        <input id="espesor" type="number" value="2.0" step="0.1"> mm
+      </div>
+
+      <div>
+        <label>Ángulo entre tubos</label><br>
+        <input id="angulo" type="number" value="90" step="1"> grados
+      </div>
+
+      <div>
+        <label>Altura libre plantilla</label><br>
+        <input id="alto" type="number" value="40" step="1"> mm
+      </div>
+    </div>
+
+    <button onclick="generar()">Generar plantilla</button>
+    <button onclick="window.print()">Imprimir / Guardar PDF</button>
+    <button onclick="exportarDXF()">Exportar DXF</button>
+
+    <p class="small">
+      Ángulo entre tubos: 90° es perpendicular. 45° es tubo inclinado. Imprimir siempre a escala 100%.
+    </p>
+  </div>
+
+  <div id="info"></div>
+
+  <h2 class="section-title no-print">Plantilla generada</h2>
+  <div id="resultado"></div>
+
+  <h2 class="section-title no-print">Vista 3D referencial</h2>
+  <div class="no-print">
+    <div id="visor3d" class="preview3d"></div>
+  </div>
+
+</div>
+
+<script>
+let coordsGlobal = [];
+let datosGlobal = {};
+let scene, camera, renderer, grupo3D;
+let animacionID = null;
+
+function generar(){
+  const D1 = parseFloat(document.getElementById("d1").value);
+  const D2 = parseFloat(document.getElementById("d2").value);
+  const t = parseFloat(document.getElementById("espesor").value);
+  const anguloGrados = parseFloat(document.getElementById("angulo").value);
+  const altoLibre = parseFloat(document.getElementById("alto").value);
+
+  if(!D1 || !D2 || !anguloGrados || !altoLibre){
+    alert("Completa todos los datos.");
+    return;
+  }
+
+  if(D2 >= D1){
+    alert("El tubo que llega debe ser menor que el tubo principal.");
+    return;
+  }
+
+  if(t < 0 || t*2 >= D2){
+    alert("El espesor no es válido para ese diámetro.");
+    return;
+  }
+
+  if(anguloGrados <= 0 || anguloGrados > 90){
+    alert("Usa un ángulo entre 1° y 90°.");
+    return;
+  }
+
+  const R = D1 / 2;
+  const rExterior = D2 / 2;
+  const rInterior = Math.max((D2 - 2*t) / 2, 0);
+  const perimetro = Math.PI * D2;
+  const alpha = anguloGrados * Math.PI / 180;
+  const puntos = 720;
+
+  let raw = [];
+
+  /*
+    Fórmula corregida para tubos inclinados:
+    Eje principal: X
+    Eje del tubo que llega: forma ángulo alpha con el eje principal.
+    Para alpha=90° vuelve a la boca de pez simétrica clásica.
+  */
+  for(let i=0;i<=puntos;i++){
+    const theta = 2 * Math.PI * i / puntos;
+    const xPlano = perimetro * i / puntos;
+
+    const term = R*R - Math.pow(rExterior * Math.sin(theta), 2);
+
+    if(term < 0){
+      raw.push({x:xPlano, s:0, theta});
+      continue;
+    }
+
+    const s = (Math.sqrt(term) - rExterior * Math.cos(theta) * Math.cos(alpha)) / Math.sin(alpha);
+
+    raw.push({x:xPlano, s:s, theta:theta});
+  }
+
+  const sMax = Math.max(...raw.map(p => p.s));
+
+  const coords = raw.map(p => ({
+    x: p.x,
+    y: sMax - p.s,
+    theta: p.theta,
+    s: p.s
+  }));
+
+  coordsGlobal = coords;
+  datosGlobal = {D1,D2,t,rExterior,rInterior,anguloGrados,altoLibre,perimetro,sMax};
+
+  const kgm = calcularPesoMetro(D2,t,7850);
+
+  document.getElementById("info").innerHTML = `
+    <div class="card">
+      <b>Datos calculados</b><br>
+      D1 principal: ${D1.toFixed(2)} mm<br>
+      D2 que llega: ${D2.toFixed(2)} mm<br>
+      Espesor D2: ${t.toFixed(2)} mm<br>
+      Perímetro de plantilla: ${perimetro.toFixed(2)} mm<br>
+      Ángulo entre tubos: ${anguloGrados.toFixed(1)}°<br>
+      Peso referencial D2: ${kgm.toFixed(3)} kg/m usando acero 7850 kg/m³<br>
+      <b>Impresión:</b> escala 100%. Verifica el rectángulo de calibración 50 mm x 10 mm.
+    </div>
+  `;
+
+  dibujarPlantilla();
+  dibujar3D();
+}
+
+function calcularPesoMetro(D,t,dens){
+  const area_mm2 = Math.PI/4 * (D*D - (D-2*t)*(D-2*t));
+  return area_mm2 * 1e-6 * dens;
+}
+
+function dibujarPlantilla(){
+  const {D1,D2,t,anguloGrados,altoLibre,perimetro} = datosGlobal;
+
+  const anchoPagina = 277;
+  const altoPagina = 190;
+  const margenX = 12;
+  const margenY = 34;
+  const anchoUtil = anchoPagina - 2*margenX;
+
+  const maxY = Math.max(...coordsGlobal.map(p => p.y));
+  const baseY = margenY + maxY + altoLibre;
+  const numPaginas = Math.ceil(perimetro / anchoUtil);
+
+  let html = "";
+
+  for(let pagina=0; pagina<numPaginas; pagina++){
+    const inicio = pagina * anchoUtil;
+    const fin = inicio + anchoUtil;
+
+    let path = "";
+
+    coordsGlobal.forEach(p=>{
+      if(p.x >= inicio && p.x <= fin){
+        const x = margenX + (p.x - inicio);
+        const y = margenY + p.y;
+        path += path === "" ? `M ${x} ${y}` : ` L ${x} ${y}`;
+      }
+    });
+
+    let guias = "";
+
+    for(let mm=Math.ceil(inicio/10)*10; mm<=fin; mm+=10){
+      const x = margenX + (mm - inicio);
+      guias += `<line x1="${x}" y1="${margenY}" x2="${x}" y2="${baseY}" stroke="#e6e6e6" stroke-width="0.12"/>`;
+    }
+
+    for(let deg=0; deg<=360; deg+=45){
+      const pos = perimetro * deg / 360;
+      if(pos >= inicio && pos <= fin){
+        const x = margenX + (pos - inicio);
+        guias += `
+          <line x1="${x}" y1="${margenY-7}" x2="${x}" y2="${baseY}" stroke="#888" stroke-width="0.28"/>
+          <text x="${x+1}" y="${margenY-10}" font-size="4">${deg}°</text>
+        `;
+      }
+    }
+
+    html += `
+      <div class="page">
+        <svg viewBox="0 0 ${anchoPagina} ${altoPagina}" xmlns="http://www.w3.org/2000/svg">
+          <text x="12" y="10" font-size="5.5" font-weight="bold">
+            Plantilla Boca de Pez - Página ${pagina+1} de ${numPaginas}
+          </text>
+
+          <text x="12" y="20" font-size="4">
+            D1=${D1.toFixed(1)} mm | D2=${D2.toFixed(1)} mm | Espesor=${t.toFixed(1)} mm | Ángulo=${anguloGrados.toFixed(1)}°
+          </text>
+
+          ${guias}
+
+          <path d="${path}" fill="none" stroke="black" stroke-width="0.9"/>
+
+          <line x1="${margenX}" y1="${baseY}" x2="${margenX+anchoUtil}" y2="${baseY}" stroke="black" stroke-width="0.55"/>
+
+          <line x1="${margenX}" y1="${margenY-7}" x2="${margenX}" y2="${baseY}" stroke="red" stroke-width="0.35"/>
+          <line x1="${margenX+anchoUtil}" y1="${margenY-7}" x2="${margenX+anchoUtil}" y2="${baseY}" stroke="red" stroke-width="0.35"/>
+
+          <rect x="12" y="${baseY+12}" width="50" height="10" fill="none" stroke="red" stroke-width="0.45"/>
+          <text x="12" y="${baseY+27}" font-size="4">
+            Calibración: este rectángulo debe medir 50 mm x 10 mm
+          </text>
+        </svg>
+      </div>
+    `;
+  }
+
+  document.getElementById("resultado").innerHTML = html;
+}
+
+function dibujar3D(){
+  const contenedor = document.getElementById("visor3d");
+  contenedor.innerHTML = "";
+
+  if(animacionID){
+    cancelAnimationFrame(animacionID);
+    animacionID = null;
+  }
+
+  const ancho = contenedor.clientWidth;
+  const alto = contenedor.clientHeight;
+
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x111111);
+
+  camera = new THREE.PerspectiveCamera(45, ancho/alto, 0.1, 5000);
+  camera.position.set(170, 130, 220);
+  camera.lookAt(0,0,0);
+
+  renderer = new THREE.WebGLRenderer({antialias:true});
+  renderer.setSize(ancho, alto);
+  contenedor.appendChild(renderer.domElement);
+
+  scene.add(new THREE.AmbientLight(0x999999));
+
+  const luz1 = new THREE.DirectionalLight(0xffffff,1);
+  luz1.position.set(200,250,200);
+  scene.add(luz1);
+
+  grupo3D = new THREE.Group();
+  scene.add(grupo3D);
+
+  const {D1,rExterior,rInterior,anguloGrados,sMax} = datosGlobal;
+  const alpha = anguloGrados * Math.PI / 180;
+
+  const matPrincipal = new THREE.MeshBasicMaterial({
+    color:0x3b82f6,
+    wireframe:true,
+    transparent:true,
+    opacity:0.75
+  });
+
+  const matSec = new THREE.MeshBasicMaterial({
+    color:0xf97316,
+    wireframe:true,
+    transparent:true,
+    opacity:0.95
+  });
+
+  const tuboPrincipal = new THREE.Mesh(
+    new THREE.CylinderGeometry(D1/2,D1/2,180,96,1,true),
+    matPrincipal
+  );
+  tuboPrincipal.rotation.z = Math.PI/2;
+  grupo3D.add(tuboPrincipal);
+
+  const tuboSec = new THREE.Mesh(
+    new THREE.CylinderGeometry(rExterior,rExterior,170,96,1,true),
+    matSec
+  );
+
+  tuboSec.rotation.z = Math.PI/2 - alpha;
+  tuboSec.position.y = 55;
+  grupo3D.add(tuboSec);
+
+  if(rInterior > 0){
+    const tuboInterior = new THREE.Mesh(
+      new THREE.CylinderGeometry(rInterior,rInterior,172,96,1,true),
+      new THREE.MeshBasicMaterial({
+        color:0x111111,
+        wireframe:true,
+        transparent:true,
+        opacity:0.45
+      })
+    );
+    tuboInterior.rotation.z = tuboSec.rotation.z;
+    tuboInterior.position.copy(tuboSec.position);
+    grupo3D.add(tuboInterior);
+  }
+
+  const curvaMat = new THREE.LineBasicMaterial({color:0xffff00});
+  const puntosCurva = [];
+
+  coordsGlobal.forEach(p=>{
+    const theta = p.theta;
+    const xLocal = rExterior * Math.cos(theta);
+    const zLocal = rExterior * Math.sin(theta);
+    const yLocal = p.s - sMax;
+
+    const v = new THREE.Vector3(xLocal, yLocal, zLocal);
+    v.applyAxisAngle(new THREE.Vector3(0,0,1), tuboSec.rotation.z);
+    v.y += 55;
+    puntosCurva.push(v);
+  });
+
+  const curva = new THREE.Line(
+    new THREE.BufferGeometry().setFromPoints(puntosCurva),
+    curvaMat
+  );
+  grupo3D.add(curva);
+
+  scene.add(new THREE.AxesHelper(80));
+
+  let isDragging=false, prevX=0, prevY=0;
+
+  renderer.domElement.addEventListener("mousedown",e=>{
+    isDragging=true; prevX=e.clientX; prevY=e.clientY;
+  });
+
+  window.addEventListener("mouseup",()=>isDragging=false);
+
+  renderer.domElement.addEventListener("mousemove",e=>{
+    if(!isDragging) return;
+    const dx=e.clientX-prevX;
+    const dy=e.clientY-prevY;
+    grupo3D.rotation.y += dx*0.01;
+    grupo3D.rotation.x += dy*0.01;
+    prevX=e.clientX;
+    prevY=e.clientY;
+  });
+
+  grupo3D.rotation.x = -0.25;
+  grupo3D.rotation.y = -0.55;
+
+  function animar(){
+    animacionID = requestAnimationFrame(animar);
+    renderer.render(scene,camera);
+  }
+  animar();
+}
+
+function exportarDXF(){
+  if(!coordsGlobal.length){
+    alert("Primero genera la plantilla.");
+    return;
+  }
+
+  const {D1,D2,t,anguloGrados,perimetro,altoLibre} = datosGlobal;
+  const maxY = Math.max(...coordsGlobal.map(p=>p.y));
+  const baseY = maxY + altoLibre;
+
+  const paperW = 297;
+  const paperH = 210;
+  const margin = 10;
+
+  const templateX = 20;
+  const templateY = 135;
+
+  let dxf = "";
+  dxf += "0\nSECTION\n2\nHEADER\n9\n$ACADVER\n1\nAC1009\n9\n$INSUNITS\n70\n4\n0\nENDSEC\n";
+  dxf += "0\nSECTION\n2\nTABLES\n";
+  dxf += "0\nTABLE\n2\nLAYER\n70\n6\n";
+  dxf += layerR12("CORTE",7);
+  dxf += layerR12("BASE",7);
+  dxf += layerR12("GUIAS",8);
+  dxf += layerR12("CALIBRACION",1);
+  dxf += layerR12("TEXTOS",7);
+  dxf += layerR12("MARCO_A4",8);
+  dxf += "0\nENDTAB\n0\nENDSEC\n";
+  dxf += "0\nSECTION\n2\nENTITIES\n";
+
+  dxf += rectDXF("MARCO_A4",0,0,paperW,paperH,8);
+  dxf += rectDXF("MARCO_A4",margin,margin,paperW-2*margin,paperH-2*margin,8);
+
+  dxf += textoDXF("TEXTOS","PLANTILLA BOCA DE PEZ",20,190,5,7);
+  dxf += textoDXF("TEXTOS",`D1=${D1.toFixed(1)} mm   D2=${D2.toFixed(1)} mm   ESP=${t.toFixed(1)} mm   ANG=${anguloGrados.toFixed(1)} grados`,20,181,3.5,7);
+  dxf += textoDXF("TEXTOS","A4 horizontal | unidades mm | imprimir escala 1:1",20,174,3.2,7);
+
+  for(let i=0;i<coordsGlobal.length-1;i++){
+    dxf += lineaDXF("CORTE",
+      templateX + coordsGlobal[i].x,
+      templateY - coordsGlobal[i].y,
+      templateX + coordsGlobal[i+1].x,
+      templateY - coordsGlobal[i+1].y,
+      7
+    );
+  }
+
+  dxf += lineaDXF("BASE",templateX,templateY-baseY,templateX+perimetro,templateY-baseY,7);
+  dxf += lineaDXF("CALIBRACION",templateX,templateY+8,templateX,templateY-baseY,1);
+  dxf += lineaDXF("CALIBRACION",templateX+perimetro,templateY+8,templateX+perimetro,templateY-baseY,1);
+
+  for(let mm=0; mm<=perimetro; mm+=10){
+    dxf += lineaDXF("GUIAS",templateX+mm,templateY,templateX+mm,templateY-baseY,8);
+  }
+
+  for(let deg=0; deg<=360; deg+=45){
+    const x = templateX + perimetro * deg / 360;
+    dxf += lineaDXF("GUIAS",x,templateY+8,x,templateY-baseY,8);
+    dxf += textoDXF("TEXTOS",`${deg} deg`,x+1,templateY+12,3,7);
+  }
+
+  const calX = 20;
+  const calY = 32;
+  dxf += rectDXF("CALIBRACION",calX,calY,50,10,1);
+  dxf += textoDXF("TEXTOS","Calibracion 50 mm x 10 mm",calX,calY-7,3,7);
+
+  dxf += "0\nENDSEC\n0\nEOF";
+
+  descargarArchivo("plantilla_boca_pez_v5_A4_1a1.dxf", dxf, "application/dxf");
+}
+
+function layerR12(nombre,color){
+  return `0
+LAYER
+2
+${nombre}
+70
+0
+62
+${color}
+6
+CONTINUOUS
+`;
+}
+
+function lineaDXF(layer,x1,y1,x2,y2,color){
+  return `0
+LINE
+8
+${layer}
+62
+${color}
+10
+${x1.toFixed(3)}
+20
+${y1.toFixed(3)}
+30
+0
+11
+${x2.toFixed(3)}
+21
+${y2.toFixed(3)}
+31
+0
+`;
+}
+
+function textoDXF(layer,texto,x,y,h,color){
+  return `0
+TEXT
+8
+${layer}
+62
+${color}
+10
+${x.toFixed(3)}
+20
+${y.toFixed(3)}
+30
+0
+40
+${h}
+1
+${texto}
+`;
+}
+
+function rectDXF(layer,x,y,w,h,color){
+  let s="";
+  s += lineaDXF(layer,x,y,x+w,y,color);
+  s += lineaDXF(layer,x+w,y,x+w,y+h,color);
+  s += lineaDXF(layer,x+w,y+h,x,y+h,color);
+  s += lineaDXF(layer,x,y+h,x,y,color);
+  return s;
+}
+
+function descargarArchivo(nombre,contenido,tipo){
+  const blob = new Blob([contenido],{type:tipo});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href=url;
+  a.download=nombre;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+generar();
+</script>
+</body>
+</html>
