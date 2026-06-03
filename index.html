@@ -3,894 +3,259 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EMGRISAC - Optimizador de Cortes de Tubo</title>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
+  <title>Portal Técnico EMGRISAC</title>
   <style>
     :root {
-      --azul: #2563eb;
-      --azul-oscuro: #1d4ed8;
-      --gris-fondo: #f4f4f4;
-      --gris-panel: #ffffff;
-      --gris-borde: #d1d5db;
-      --gris-head: #e5e7eb;
-      --texto: #111827;
-      --rojo: #dc2626;
+      --azul: #314c91;
+      --azul-oscuro: #21386f;
+      --gris: #f3f5f8;
+      --texto: #1f2937;
+      --borde: #d9dee8;
+      --sombra: 0 18px 40px rgba(31, 41, 55, 0.12);
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
-      font-family: Arial, sans-serif;
-      background: var(--gris-fondo);
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, #ffffff 0%, #eef2f8 100%);
       color: var(--texto);
-      margin: 20px;
+      min-height: 100vh;
     }
 
-    h1, h2 {
-      text-align: center;
-      margin-top: 0;
+    header {
+      padding: 28px 7vw 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      border-bottom: 1px solid var(--borde);
+      background: rgba(255,255,255,0.82);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .logo {
+      height: 68px;
+      max-width: 420px;
+      object-fit: contain;
+    }
+
+    .badge {
+      background: var(--azul);
+      color: white;
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    main {
+      padding: 48px 7vw 70px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      align-items: center;
+      gap: 40px;
+      margin-bottom: 42px;
     }
 
     h1 {
-      margin-bottom: 25px;
+      margin: 0;
+      font-size: clamp(36px, 5vw, 64px);
+      color: var(--azul-oscuro);
+      letter-spacing: -1.5px;
+      line-height: 1.02;
+    }
+
+    .subtitle {
+      margin-top: 18px;
+      font-size: 20px;
+      line-height: 1.55;
+      color: #4b5563;
+      max-width: 760px;
     }
 
     .panel {
-      background: var(--gris-panel);
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 0 8px #ccc;
-      margin-bottom: 20px;
+      background: white;
+      border: 1px solid var(--borde);
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: var(--sombra);
+    }
+
+    .panel h2 {
+      margin: 0 0 10px;
+      color: var(--azul);
+    }
+
+    .panel p {
+      margin: 0;
+      color: #5b6472;
+      line-height: 1.5;
     }
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 12px;
-    }
-
-    label {
-      font-weight: bold;
-      display: block;
-      margin-bottom: 4px;
-    }
-
-    input, select, button {
-      padding: 8px;
-      font-size: 15px;
-      width: 100%;
-      border: 1px solid var(--gris-borde);
-      border-radius: 6px;
-    }
-
-    button {
-      background: var(--azul);
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    button:hover {
-      background: var(--azul-oscuro);
-    }
-
-    .boton-rojo {
-      background: var(--rojo);
-    }
-
-    .boton-rojo:hover {
-      background: #991b1b;
-    }
-
-    .botones {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 8px;
-      margin-top: 10px;
-      margin-bottom: 12px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-      background: white;
-    }
-
-    th, td {
-      border: 1px solid #ccc;
-      padding: 8px;
-      text-align: center;
-    }
-
-    th {
-      background: var(--gris-head);
-    }
-
-    td input {
-      text-align: center;
-    }
-
-    .resultado-box {
-      white-space: pre-wrap;
-      background: #eeeeee;
-      padding: 10px;
-      max-height: 330px;
-      overflow-y: auto;
-      border-radius: 6px;
-      font-family: Consolas, monospace;
-      font-size: 14px;
-      line-height: 1.35;
-    }
-
-    #grafico {
-      background: white;
-      padding: 15px;
-      border-radius: 10px;
-      max-height: 720px;
-      overflow-y: auto;
-      box-shadow: 0 0 8px #ccc;
-    }
-
-    .tubo {
-      margin-bottom: 18px;
-    }
-
-    .titulo-tubo {
-      font-weight: bold;
-      margin-bottom: 4px;
-    }
-
-    .barra {
-      display: flex;
-      height: 42px;
-      border: 2px solid #333;
-      width: 100%;
-      background: white;
-    }
-
-    .segmento {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13px;
-      border-right: 1px solid #333;
-      box-sizing: border-box;
-      font-weight: bold;
-      overflow: hidden;
-      white-space: nowrap;
-      color: #111;
-      min-width: 20px;
-    }
-
-    .desperdicio {
-      background: red !important;
-      color: white;
-    }
-
-    .leyenda {
-      margin-top: 20px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .item-leyenda {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      background: #eeeeee;
-      padding: 5px 8px;
-      border-radius: 5px;
-      font-size: 14px;
-    }
-
-    .color-box {
-      width: 20px;
-      height: 20px;
-      border: 1px solid #333;
-    }
-
-    .nota {
-      font-size: 13px;
-      color: #555;
-      margin-top: 4px;
-    }
-
-    .mini-resumen {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 10px;
-      margin-top: 10px;
+      grid-template-columns: repeat(4, minmax(220px, 1fr));
+      gap: 22px;
     }
 
     .card {
-      background: #f9fafb;
-      border: 1px solid var(--gris-borde);
-      border-radius: 8px;
-      padding: 10px;
-      text-align: center;
+      text-decoration: none;
+      color: inherit;
+      background: white;
+      border: 1px solid var(--borde);
+      border-radius: 24px;
+      padding: 26px;
+      min-height: 230px;
+      box-shadow: 0 8px 24px rgba(31, 41, 55, 0.07);
+      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
-    .card strong {
-      display: block;
-      font-size: 13px;
-      color: #555;
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--sombra);
+      border-color: var(--azul);
     }
 
-    .card span {
-      font-size: 18px;
-      font-weight: bold;
+    .icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 18px;
+      background: var(--gris);
+      color: var(--azul);
+      display: grid;
+      place-items: center;
+      font-size: 28px;
+      font-weight: 900;
+      margin-bottom: 18px;
     }
 
-    @media (max-width: 700px) {
-      body {
-        margin: 10px;
-      }
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 22px;
+      color: var(--azul-oscuro);
+    }
 
-      .barra {
-        height: 52px;
-      }
+    .card p {
+      margin: 0;
+      color: #5b6472;
+      line-height: 1.45;
+      font-size: 15px;
+    }
 
-      .segmento {
-        font-size: 11px;
-      }
+    .status {
+      margin-top: 22px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--azul);
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      background: var(--azul);
+      border-radius: 50%;
+    }
+
+    footer {
+      padding: 24px 7vw;
+      color: #6b7280;
+      border-top: 1px solid var(--borde);
+      background: white;
+      font-size: 14px;
+    }
+
+    @media (max-width: 1050px) {
+      .hero { grid-template-columns: 1fr; }
+      .grid { grid-template-columns: repeat(2, minmax(220px, 1fr)); }
+    }
+
+    @media (max-width: 640px) {
+      header { flex-direction: column; align-items: flex-start; }
+      .logo { width: 100%; height: auto; }
+      .grid { grid-template-columns: 1fr; }
+      main { padding-top: 34px; }
     }
   </style>
 </head>
-
 <body>
-
-<h1>EMGRISAC - Optimizador de Cortes de Tubo</h1>
-
-<div class="panel">
-  <h2>Datos generales</h2>
-
-  <div class="grid">
-    <div>
-      <label>Largo del tubo comercial (m)</label>
-      <input id="largoTotal" type="number" step="0.01" value="6" />
-    </div>
-
-    <div>
-      <label>Precio por tubo (S/)</label>
-      <input id="precioTubo" type="number" step="0.01" value="0" />
-    </div>
-
-    <div>
-      <label>Densidad del material (kg/m³)</label>
-      <input id="densidad" type="number" step="1" value="7850" />
-      <div class="nota">A36 ≈ 7850 kg/m³. Puedes modificarlo si usas otro material.</div>
-    </div>
-
-    <div>
-      <label>Tipo de sección</label>
-      <select id="tipoSeccion" onchange="actualizarCamposSeccion()">
-        <option value="rectangular">Tubo rectangular / cuadrado</option>
-        <option value="circular">Tubo circular</option>
-      </select>
-    </div>
-  </div>
-</div>
-
-<div class="panel">
-  <h2>Dimensiones de sección</h2>
-
-  <div id="camposRectangular" class="grid">
-    <div>
-      <label>Alto exterior (mm)</label>
-      <input id="alto" type="number" step="0.01" value="40" />
-    </div>
-
-    <div>
-      <label>Ancho exterior (mm)</label>
-      <input id="ancho" type="number" step="0.01" value="40" />
-    </div>
-
-    <div>
-      <label>Espesor (mm)</label>
-      <input id="espesorRect" type="number" step="0.01" value="2" />
-    </div>
-  </div>
-
-  <div id="camposCircular" class="grid" style="display:none;">
-    <div>
-      <label>Diámetro exterior (mm)</label>
-      <input id="diametro" type="number" step="0.01" value="50.8" />
-    </div>
-
-    <div>
-      <label>Espesor (mm)</label>
-      <input id="espesorCirc" type="number" step="0.01" value="2" />
-    </div>
-  </div>
-
-  <div class="nota">
-    El peso por metro se calcula con el área de sección y la densidad. Las dimensiones se ingresan en milímetros.
-  </div>
-</div>
-
-<div class="panel">
-  <h2>Lista de cortes</h2>
-
-  <div class="botones">
-    <button onclick="agregarFila()">+ Agregar fila</button>
-    <button onclick="calcular()">Calcular</button>
-    <button onclick="limpiar()" class="boton-rojo">Limpiar</button>
-    <button onclick="exportarPDF()">Exportar PDF</button>
-    <button onclick="exportarExcel()">Exportar Excel</button>
-  </div>
-
-  <table id="tablaEntrada">
-    <thead>
-      <tr>
-        <th>Medida de corte (m)</th>
-        <th>Cantidad</th>
-        <th>Eliminar</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><input type="number" step="0.01" value="1.30" /></td>
-        <td><input type="number" value="4" /></td>
-        <td><button onclick="eliminarFila(this)" class="boton-rojo">X</button></td>
-      </tr>
-      <tr>
-        <td><input type="number" step="0.01" value="0.18" /></td>
-        <td><input type="number" value="4" /></td>
-        <td><button onclick="eliminarFila(this)" class="boton-rojo">X</button></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<div class="panel">
-  <h2>Indicadores rápidos</h2>
-  <div class="mini-resumen">
-    <div class="card"><strong>Tubos usados</strong><span id="cardTubos">-</span></div>
-    <div class="card"><strong>Desperdicio total</strong><span id="cardDesperdicio">-</span></div>
-    <div class="card"><strong>Costo total</strong><span id="cardCosto">-</span></div>
-    <div class="card"><strong>Peso por metro lineal</strong><span id="cardPesoMetro">-</span></div>
-  </div>
-</div>
-
-<div class="panel">
-  <h2>Resultados detallados</h2>
-  <div id="resultadoDetalle" class="resultado-box"></div>
-</div>
-
-<div class="panel">
-  <h2>Resumen agrupado por tubo</h2>
-  <div id="resultadoAgrupado" class="resultado-box"></div>
-</div>
-
-<div class="panel">
-  <h2>Resumen general, costos y pesos</h2>
-  <div id="resultadoGeneral" class="resultado-box"></div>
-</div>
-
-<div id="grafico">
-  <h2>Gráfico de tubos</h2>
-  <div id="tubos"></div>
-  <div class="leyenda" id="leyenda"></div>
-</div>
-
-<script>
-  const APP_NAME = "EMGRISAC - Optimizador de Cortes de Tubo";
-
-  let tubosGlobal = [];
-  let largoGlobal = 6;
-  let cortesGlobal = [];
-  let coloresGlobal = {};
-  let datosGlobales = {};
-
-  function actualizarCamposSeccion() {
-    const tipo = document.getElementById("tipoSeccion").value;
-
-    document.getElementById("camposRectangular").style.display =
-      tipo === "rectangular" ? "grid" : "none";
-
-    document.getElementById("camposCircular").style.display =
-      tipo === "circular" ? "grid" : "none";
-  }
-
-  function agregarFila() {
-    const tbody = document.querySelector("#tablaEntrada tbody");
-    const fila = document.createElement("tr");
-
-    fila.innerHTML = `
-      <td><input type="number" step="0.01" /></td>
-      <td><input type="number" /></td>
-      <td><button onclick="eliminarFila(this)" class="boton-rojo">X</button></td>
-    `;
-
-    tbody.appendChild(fila);
-  }
-
-  function eliminarFila(boton) {
-    boton.closest("tr").remove();
-  }
-
-  function obtenerCortes() {
-    const filas = document.querySelectorAll("#tablaEntrada tbody tr");
-    let cortes = [];
-
-    filas.forEach(fila => {
-      const inputs = fila.querySelectorAll("input");
-      const medida = parseFloat(inputs[0].value);
-      const cantidad = parseInt(inputs[1].value);
-
-      if (!isNaN(medida) && !isNaN(cantidad) && medida > 0 && cantidad > 0) {
-        cortes.push({ medida, cantidad });
-      }
-    });
-
-    return cortes;
-  }
-
-  function calcularAreaSeccionM2() {
-    const tipo = document.getElementById("tipoSeccion").value;
-
-    if (tipo === "rectangular") {
-      const alto = parseFloat(document.getElementById("alto").value);
-      const ancho = parseFloat(document.getElementById("ancho").value);
-      const e = parseFloat(document.getElementById("espesorRect").value);
-
-      if ([alto, ancho, e].some(v => isNaN(v) || v <= 0)) return 0;
-      if (2 * e >= alto || 2 * e >= ancho) return 0;
-
-      const areaExterior = alto * ancho;
-      const areaInterior = (alto - 2 * e) * (ancho - 2 * e);
-      const areaMm2 = areaExterior - areaInterior;
-
-      return areaMm2 / 1000000;
-    }
-
-    if (tipo === "circular") {
-      const D = parseFloat(document.getElementById("diametro").value);
-      const e = parseFloat(document.getElementById("espesorCirc").value);
-
-      if ([D, e].some(v => isNaN(v) || v <= 0)) return 0;
-      if (2 * e >= D) return 0;
-
-      const d = D - 2 * e;
-      const areaMm2 = (Math.PI / 4) * (D * D - d * d);
-
-      return areaMm2 / 1000000;
-    }
-
-    return 0;
-  }
-
-  function calcularPesoMetro() {
-    const densidad = parseFloat(document.getElementById("densidad").value);
-    const areaM2 = calcularAreaSeccionM2();
-
-    if (isNaN(densidad) || densidad <= 0 || areaM2 <= 0) return 0;
-
-    return areaM2 * densidad;
-  }
-
-  function optimizarCortes(largoTotal, cortes) {
-    const cortesOrdenados = [...cortes].sort((a, b) => b.medida - a.medida);
-    let tubos = [];
-
-    for (let corte of cortesOrdenados) {
-      for (let i = 0; i < corte.cantidad; i++) {
-        let agregado = false;
-
-        for (let tubo of tubos) {
-          if (tubo.espacioDisponible >= corte.medida - 0.00001) {
-            tubo.cortes.push(corte.medida);
-            tubo.espacioDisponible -= corte.medida;
-            agregado = true;
-            break;
-          }
-        }
-
-        if (!agregado) {
-          tubos.push({
-            cortes: [corte.medida],
-            espacioDisponible: largoTotal - corte.medida
-          });
-        }
-      }
-    }
-
-    return tubos;
-  }
-
-  function contarCortes(lista) {
-    const conteo = {};
-
-    lista.forEach(medida => {
-      const clave = Number(medida).toFixed(2);
-      conteo[clave] = (conteo[clave] || 0) + 1;
-    });
-
-    return conteo;
-  }
-
-  function obtenerColores(cortes) {
-    const coloresBase = [
-      "#60a5fa", "#34d399", "#facc15", "#c084fc",
-      "#fb923c", "#22d3ee", "#a3e635", "#f472b6",
-      "#fde68a", "#93c5fd", "#86efac", "#d8b4fe",
-      "#fca5a5", "#5eead4", "#c4b5fd", "#fdba74",
-      "#bef264", "#7dd3fc", "#f9a8d4", "#fef08a"
-    ];
-
-    const medidas = [...new Set(cortes.map(c => Number(c.medida).toFixed(2)))];
-    let colores = {};
-
-    medidas.forEach((medida, index) => {
-      colores[medida] = coloresBase[index % coloresBase.length];
-    });
-
-    return colores;
-  }
-
-  function calcular() {
-    const largoTotal = parseFloat(document.getElementById("largoTotal").value);
-    const precioTubo = parseFloat(document.getElementById("precioTubo").value) || 0;
-    const densidad = parseFloat(document.getElementById("densidad").value);
-    const cortes = obtenerCortes();
-    const pesoMetro = calcularPesoMetro();
-
-    if (!largoTotal || largoTotal <= 0 || cortes.length === 0 || !densidad || densidad <= 0) {
-      alert("Ingresa datos válidos.");
-      return;
-    }
-
-    for (const corte of cortes) {
-      if (corte.medida > largoTotal) {
-        alert(`El corte de ${corte.medida} m es mayor que el largo del tubo comercial.`);
-        return;
-      }
-    }
-
-    if (pesoMetro <= 0) {
-      alert("Revisa las dimensiones de la sección. El peso por metro no puede calcularse.");
-      return;
-    }
-
-    const tubos = optimizarCortes(largoTotal, cortes);
-    const colores = obtenerColores(cortes);
-    const datos = calcularDatosGenerales(tubos, largoTotal, precioTubo, pesoMetro);
-
-    tubosGlobal = tubos;
-    largoGlobal = largoTotal;
-    cortesGlobal = cortes;
-    coloresGlobal = colores;
-    datosGlobales = datos;
-
-    mostrarResultados(tubos, datos);
-    dibujarTubos(tubos, largoTotal, cortes, colores);
-    actualizarCards(datos);
-  }
-
-  function calcularDatosGenerales(tubos, largoTotal, precioTubo, pesoMetro) {
-    let desperdicioTotal = 0;
-    let longitudUtil = 0;
-
-    tubos.forEach(tubo => {
-      desperdicioTotal += tubo.espacioDisponible;
-      tubo.cortes.forEach(corte => longitudUtil += corte);
-    });
-
-    const tubosUsados = tubos.length;
-    const longitudComprada = tubosUsados * largoTotal;
-    const costoTotal = tubosUsados * precioTubo;
-    const costoMetro = precioTubo > 0 ? precioTubo / largoTotal : 0;
-    const costoDesperdicio = desperdicioTotal * costoMetro;
-    const pesoTotalComprado = longitudComprada * pesoMetro;
-    const pesoUtil = longitudUtil * pesoMetro;
-    const pesoDesperdicio = desperdicioTotal * pesoMetro;
-
-    return {
-      tubosUsados,
-      longitudComprada,
-      longitudUtil,
-      desperdicioTotal,
-      precioTubo,
-      costoTotal,
-      costoMetro,
-      costoDesperdicio,
-      pesoMetro,
-      pesoTotalComprado,
-      pesoUtil,
-      pesoDesperdicio
-    };
-  }
-
-  function actualizarCards(datos) {
-    document.getElementById("cardTubos").textContent = datos.tubosUsados;
-    document.getElementById("cardDesperdicio").textContent = `${datos.desperdicioTotal.toFixed(2)} m`;
-    document.getElementById("cardCosto").textContent = `S/ ${datos.costoTotal.toFixed(2)}`;
-    document.getElementById("cardPesoMetro").textContent = `${datos.pesoMetro.toFixed(3)} kg/m`;
-  }
-
-  function mostrarResultados(tubos, datos) {
-    mostrarDetalle(tubos);
-    mostrarAgrupado(tubos);
-    mostrarGeneral(tubos, datos);
-  }
-
-  function mostrarDetalle(tubos) {
-    let texto = "";
-
-    tubos.forEach((tubo, index) => {
-      texto += `Tubo ${index + 1}: Cortes = ${tubo.cortes.map(c => c.toFixed(2)).join(", ")} m | Desperdicio = ${tubo.espacioDisponible.toFixed(2)} m\n`;
-    });
-
-    document.getElementById("resultadoDetalle").textContent = texto;
-  }
-
-  function mostrarAgrupado(tubos) {
-    let texto = "";
-
-    tubos.forEach((tubo, index) => {
-      const conteo = contarCortes(tubo.cortes);
-
-      texto += `Tubo ${index + 1}:\n`;
-
-      Object.entries(conteo).forEach(([medida, cantidad]) => {
-        texto += `• ${cantidad} cortes de ${medida} m\n`;
-      });
-
-      texto += `• Desperdicio: ${tubo.espacioDisponible.toFixed(2)} m\n\n`;
-    });
-
-    document.getElementById("resultadoAgrupado").textContent = texto;
-  }
-
-  function mostrarGeneral(tubos, datos) {
-    let todosLosCortes = [];
-
-    tubos.forEach(tubo => {
-      todosLosCortes.push(...tubo.cortes);
-    });
-
-    const conteoGeneral = contarCortes(todosLosCortes);
-
-    let texto = "RESUMEN TOTAL DE CORTES\n\n";
-
-    Object.entries(conteoGeneral).forEach(([medida, cantidad]) => {
-      texto += `• ${cantidad} cortes de ${medida} m\n`;
-    });
-
-    texto += `\nRESUMEN DE MATERIAL Y COSTOS\n\n`;
-    texto += `Tubos usados: ${datos.tubosUsados}\n`;
-    texto += `Longitud comprada: ${datos.longitudComprada.toFixed(2)} m\n`;
-    texto += `Longitud útil: ${datos.longitudUtil.toFixed(2)} m\n`;
-    texto += `Desperdicio total: ${datos.desperdicioTotal.toFixed(2)} m\n\n`;
-
-    texto += `Precio por tubo: S/ ${datos.precioTubo.toFixed(2)}\n`;
-    texto += `Costo total: S/ ${datos.costoTotal.toFixed(2)}\n`;
-    texto += `Costo estimado del desperdicio: S/ ${datos.costoDesperdicio.toFixed(2)}\n\n`;
-
-    texto += `Peso por metro lineal: ${datos.pesoMetro.toFixed(3)} kg/m\n`;
-    texto += `Peso total comprado: ${datos.pesoTotalComprado.toFixed(2)} kg\n`;
-    texto += `Peso útil: ${datos.pesoUtil.toFixed(2)} kg\n`;
-    texto += `Peso desperdiciado: ${datos.pesoDesperdicio.toFixed(2)} kg\n`;
-
-    document.getElementById("resultadoGeneral").textContent = texto;
-  }
-
-  function dibujarTubos(tubos, largoTotal, cortes, colores) {
-    const contenedor = document.getElementById("tubos");
-    const leyenda = document.getElementById("leyenda");
-
-    contenedor.innerHTML = "";
-    leyenda.innerHTML = "";
-
-    tubos.forEach((tubo, index) => {
-      const divTubo = document.createElement("div");
-      divTubo.className = "tubo";
-
-      const titulo = document.createElement("div");
-      titulo.className = "titulo-tubo";
-      titulo.textContent = `Tubo ${index + 1}`;
-
-      const barra = document.createElement("div");
-      barra.className = "barra";
-
-      tubo.cortes.forEach(corte => {
-        const clave = corte.toFixed(2);
-        const segmento = document.createElement("div");
-        segmento.className = "segmento";
-        segmento.style.width = `${(corte / largoTotal) * 100}%`;
-        segmento.style.background = colores[clave];
-        segmento.textContent = `${clave} m`;
-
-        barra.appendChild(segmento);
-      });
-
-      if (tubo.espacioDisponible > 0.00001) {
-        const desperdicio = document.createElement("div");
-        desperdicio.className = "segmento desperdicio";
-        desperdicio.style.width = `${(tubo.espacioDisponible / largoTotal) * 100}%`;
-        desperdicio.textContent = `${tubo.espacioDisponible.toFixed(2)} m`;
-
-        barra.appendChild(desperdicio);
-      }
-
-      divTubo.appendChild(titulo);
-      divTubo.appendChild(barra);
-      contenedor.appendChild(divTubo);
-    });
-
-    const medidasUnicas = [...new Set(cortes.map(c => c.medida.toFixed(2)))];
-
-    medidasUnicas.forEach(medida => {
-      const item = document.createElement("div");
-      item.className = "item-leyenda";
-
-      const colorBox = document.createElement("div");
-      colorBox.className = "color-box";
-      colorBox.style.background = colores[medida];
-
-      const texto = document.createElement("span");
-      texto.textContent = `${medida} m`;
-
-      item.appendChild(colorBox);
-      item.appendChild(texto);
-      leyenda.appendChild(item);
-    });
-
-    const itemRojo = document.createElement("div");
-    itemRojo.className = "item-leyenda";
-    itemRojo.innerHTML = `<div class="color-box" style="background:red"></div><span>Desperdicio</span>`;
-    leyenda.appendChild(itemRojo);
-  }
-
-  function limpiar() {
-    document.querySelector("#tablaEntrada tbody").innerHTML = "";
-    document.getElementById("resultadoDetalle").textContent = "";
-    document.getElementById("resultadoAgrupado").textContent = "";
-    document.getElementById("resultadoGeneral").textContent = "";
-    document.getElementById("tubos").innerHTML = "";
-    document.getElementById("leyenda").innerHTML = "";
-
-    document.getElementById("cardTubos").textContent = "-";
-    document.getElementById("cardDesperdicio").textContent = "-";
-    document.getElementById("cardCosto").textContent = "-";
-    document.getElementById("cardPesoMetro").textContent = "-";
-
-    tubosGlobal = [];
-    cortesGlobal = [];
-    datosGlobales = {};
-  }
-
-  function exportarPDF() {
-    if (tubosGlobal.length === 0) {
-      alert("Primero calcula los cortes.");
-      return;
-    }
-
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF();
-
-    let y = 15;
-    const margen = 10;
-    const anchoTexto = 190;
-
-    function agregarLinea(texto = "", salto = 7) {
-      const lineas = pdf.splitTextToSize(String(texto), anchoTexto);
-
-      lineas.forEach(linea => {
-        if (y > 280) {
-          pdf.addPage();
-          y = 15;
-        }
-
-        pdf.text(linea, margen, y);
-        y += salto;
-      });
-    }
-
-    pdf.setFontSize(16);
-    agregarLinea(APP_NAME, 9);
-
-    pdf.setFontSize(11);
-    agregarLinea(`Fecha: ${new Date().toLocaleDateString()}`);
-    agregarLinea("");
-
-    agregarLinea("RESULTADOS DETALLADOS");
-    tubosGlobal.forEach((tubo, index) => {
-      agregarLinea(`Tubo ${index + 1}: Cortes = ${tubo.cortes.map(c => c.toFixed(2)).join(", ")} m | Desperdicio = ${tubo.espacioDisponible.toFixed(2)} m`);
-    });
-
-    agregarLinea("");
-    agregarLinea("RESUMEN AGRUPADO POR TUBO");
-
-    tubosGlobal.forEach((tubo, index) => {
-      const conteo = contarCortes(tubo.cortes);
-      agregarLinea(`Tubo ${index + 1}:`);
-
-      Object.entries(conteo).forEach(([medida, cantidad]) => {
-        agregarLinea(`- ${cantidad} cortes de ${medida} m`);
-      });
-
-      agregarLinea(`- Desperdicio: ${tubo.espacioDisponible.toFixed(2)} m`);
-    });
-
-    agregarLinea("");
-    agregarLinea("RESUMEN GENERAL, COSTOS Y PESOS");
-    agregarLinea(document.getElementById("resultadoGeneral").textContent);
-
-    pdf.save("EMGRISAC_reporte_cortes.pdf");
-  }
-
-  function exportarExcel() {
-    if (tubosGlobal.length === 0) {
-      alert("Primero calcula los cortes.");
-      return;
-    }
-
-    const libro = XLSX.utils.book_new();
-
-    const detalle = [["Tubo", "Cortes", "Desperdicio (m)"]];
-    tubosGlobal.forEach((tubo, index) => {
-      detalle.push([
-        `Tubo ${index + 1}`,
-        tubo.cortes.map(c => c.toFixed(2)).join(", "),
-        Number(tubo.espacioDisponible.toFixed(2))
-      ]);
-    });
-
-    const agrupado = [["Tubo", "Medida (m)", "Cantidad", "Desperdicio del tubo (m)"]];
-    tubosGlobal.forEach((tubo, index) => {
-      const conteo = contarCortes(tubo.cortes);
-
-      Object.entries(conteo).forEach(([medida, cantidad]) => {
-        agrupado.push([
-          `Tubo ${index + 1}`,
-          Number(medida),
-          cantidad,
-          Number(tubo.espacioDisponible.toFixed(2))
-        ]);
-      });
-    });
-
-    let todosLosCortes = [];
-    tubosGlobal.forEach(tubo => todosLosCortes.push(...tubo.cortes));
-    const conteoGeneral = contarCortes(todosLosCortes);
-
-    const resumenGeneral = [["Medida (m)", "Cantidad total"]];
-    Object.entries(conteoGeneral).forEach(([medida, cantidad]) => {
-      resumenGeneral.push([Number(medida), cantidad]);
-    });
-
-    const costos = [
-      ["Concepto", "Valor"],
-      ["Tubos usados", datosGlobales.tubosUsados],
-      ["Longitud comprada (m)", Number(datosGlobales.longitudComprada.toFixed(2))],
-      ["Longitud útil (m)", Number(datosGlobales.longitudUtil.toFixed(2))],
-      ["Desperdicio total (m)", Number(datosGlobales.desperdicioTotal.toFixed(2))],
-      ["Precio por tubo (S/)", Number(datosGlobales.precioTubo.toFixed(2))],
-      ["Costo total (S/)", Number(datosGlobales.costoTotal.toFixed(2))],
-      ["Costo estimado desperdicio (S/)", Number(datosGlobales.costoDesperdicio.toFixed(2))],
-      ["Peso por metro lineal (kg/m)", Number(datosGlobales.pesoMetro.toFixed(3))],
-      ["Peso total comprado (kg)", Number(datosGlobales.pesoTotalComprado.toFixed(2))],
-      ["Peso útil (kg)", Number(datosGlobales.pesoUtil.toFixed(2))],
-      ["Peso desperdiciado (kg)", Number(datosGlobales.pesoDesperdicio.toFixed(2))]
-    ];
-
-    XLSX.utils.book_append_sheet(libro, XLSX.utils.aoa_to_sheet(detalle), "Detalle por tubo");
-    XLSX.utils.book_append_sheet(libro, XLSX.utils.aoa_to_sheet(agrupado), "Resumen agrupado");
-    XLSX.utils.book_append_sheet(libro, XLSX.utils.aoa_to_sheet(resumenGeneral), "Resumen general");
-    XLSX.utils.book_append_sheet(libro, XLSX.utils.aoa_to_sheet(costos), "Costos y pesos");
-
-    XLSX.writeFile(libro, "EMGRISAC_reporte_cortes.xlsx");
-  }
-</script>
-
+  <header>
+    <img src="img/logo-emgrisac.png" alt="Logo EMGRISAC" class="logo" />
+    <div class="badge">Portal Técnico</div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <h1>Portal Técnico EMGRISAC</h1>
+        <p class="subtitle">
+          Herramientas digitales para optimizar procesos de estructuras metálicas:
+          cortes, desarrollos, cálculos técnicos y futuras aplicaciones internas.
+        </p>
+      </div>
+      <div class="panel">
+        <h2>Acceso rápido</h2>
+        <p>
+          Desde este portal podrás entrar a tus herramientas web. Por ahora los botones están listos para enlazarse cuando coloques los archivos finales.
+        </p>
+      </div>
+    </section>
+
+    <section class="grid">
+      <a class="card" href="optimizador.html">
+        <div>
+          <div class="icon">✂</div>
+          <h3>Optimizador de cortes</h3>
+          <p>Organiza piezas, reduce desperdicio y calcula aprovechamiento de material.</p>
+        </div>
+        <span class="status"><span class="dot"></span> Entrar</span>
+      </a>
+
+      <a class="card" href="bocapez.html">
+        <div>
+          <div class="icon">⌁</div>
+          <h3>Boca de pez</h3>
+          <p>Genera plantillas para tubos, vista 3D y desarrollo para corte.</p>
+        </div>
+        <span class="status"><span class="dot"></span> Entrar</span>
+      </a>
+
+      <a class="card" href="#">
+        <div>
+          <div class="icon">㎏</div>
+          <h3>Calculadora de pesos</h3>
+          <p>Próximamente: pesos de tubos, planchas, perfiles y materiales.</p>
+        </div>
+        <span class="status"><span class="dot"></span> Próximamente</span>
+      </a>
+
+      <a class="card" href="#">
+        <div>
+          <div class="icon">S/</div>
+          <h3>Cotizador técnico</h3>
+          <p>Próximamente: materiales, mano de obra, consumibles y margen.</p>
+        </div>
+        <span class="status"><span class="dot"></span> Próximamente</span>
+      </a>
+    </section>
+  </main>
+
+  <footer>
+    © EMGRISAC — Estructuras Metálicas | Portal Técnico interno
+  </footer>
 </body>
 </html>
