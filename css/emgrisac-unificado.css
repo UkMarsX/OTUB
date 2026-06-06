@@ -1,0 +1,95 @@
+
+/* ================================
+   EMGRISAC UI - Diseño unificado v2.0
+   ================================ */
+:root{
+  --emg-azul:#314c91;
+  --emg-azul-oscuro:#21386f;
+  --emg-fondo:#f3f5f8;
+  --emg-panel:#ffffff;
+  --emg-texto:#1f2937;
+  --emg-muted:#667085;
+  --emg-borde:#d9dee8;
+  --emg-sombra:0 18px 40px rgba(31,41,55,.10);
+  --emg-radio:22px;
+}
+*{box-sizing:border-box}
+body.emg-unificado{
+  margin:0!important;
+  min-height:100vh;
+  background:linear-gradient(135deg,#f8fafc 0%,#eef2f8 100%)!important;
+  color:var(--emg-texto)!important;
+  font-family:Arial, Helvetica, sans-serif!important;
+  padding-left:280px!important;
+  padding-top:78px!important;
+}
+.emg-sidebar{
+  position:fixed; inset:0 auto 0 0; width:280px; z-index:9999;
+  background:linear-gradient(180deg,var(--emg-azul-oscuro),var(--emg-azul));
+  color:#fff; padding:22px 18px; display:flex; flex-direction:column; gap:18px;
+  box-shadow:14px 0 35px rgba(33,56,111,.22);
+}
+.emg-brand{background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.18); border-radius:22px; padding:14px; display:flex; align-items:center; gap:12px;}
+.emg-brand img{width:58px; height:58px; object-fit:contain; background:white; border-radius:16px; padding:6px;}
+.emg-brand strong{display:block; font-size:16px; letter-spacing:.2px}.emg-brand span{font-size:12px; opacity:.86}
+.emg-nav{display:flex; flex-direction:column; gap:8px}.emg-nav a{color:#eef4ff; text-decoration:none; padding:12px 14px; border-radius:16px; display:flex; align-items:center; gap:11px; font-weight:700; border:1px solid transparent; transition:.18s ease;}
+.emg-nav a:hover{background:rgba(255,255,255,.12); transform:translateX(3px)}.emg-nav a.active{background:white; color:var(--emg-azul-oscuro); box-shadow:0 10px 24px rgba(0,0,0,.14)}
+.emg-sidebar-footer{margin-top:auto; font-size:12px; opacity:.82; line-height:1.45; padding:12px 4px;}
+.emg-topbar{position:fixed!important; top:0; left:280px; right:0; height:78px; z-index:9998; background:rgba(255,255,255,.88)!important; backdrop-filter:blur(14px); border-bottom:1px solid var(--emg-borde)!important; display:flex!important; align-items:center; justify-content:space-between; padding:0 34px!important; color:var(--emg-texto)!important; box-shadow:none!important;}
+.emg-page-title strong{display:block; color:var(--emg-azul-oscuro); font-size:20px}.emg-page-title span{font-size:13px; color:var(--emg-muted)}
+.emg-chip{background:#eef2ff; color:var(--emg-azul-oscuro); border:1px solid #dbe3ff; padding:9px 13px; border-radius:999px; font-weight:800; font-size:13px;}
+/* Contenedores principales */
+body.emg-unificado main,
+body.emg-unificado .app,
+body.emg-unificado .container{
+  max-width:1200px!important;
+  margin:26px auto!important;
+  padding-left:24px!important; padding-right:24px!important;
+}
+/* Paneles y tarjetas */
+body.emg-unificado .card,
+body.emg-unificado .panel,
+body.emg-unificado .container,
+body.emg-unificado .app > section,
+body.emg-unificado fieldset{
+  border-radius:var(--emg-radio)!important;
+  border:1px solid var(--emg-borde)!important;
+  box-shadow:0 10px 28px rgba(31,41,55,.07)!important;
+}
+body.emg-unificado h1, body.emg-unificado h2, body.emg-unificado h3{color:var(--emg-azul-oscuro)!important;}
+/* Headers internos: los volvemos corporativos sin romper la lógica */
+body.emg-unificado header:not(.emg-topbar){
+  background:white!important; color:var(--emg-texto)!important; border:1px solid var(--emg-borde)!important; border-radius:24px!important; box-shadow:0 10px 28px rgba(31,41,55,.07)!important; margin:24px auto!important; max-width:1200px!important; padding:22px 24px!important;
+}
+body.emg-unificado header:not(.emg-topbar) h1{margin:0!important; color:var(--emg-azul-oscuro)!important; text-align:left!important;}
+body.emg-unificado header:not(.emg-topbar) p{color:var(--emg-muted)!important;}
+/* Formularios */
+body.emg-unificado input,
+body.emg-unificado select,
+body.emg-unificado textarea{
+  border:1px solid var(--emg-borde)!important; border-radius:12px!important; padding:10px 12px!important; background:#fff!important; color:var(--emg-texto)!important; outline:none!important;
+}
+body.emg-unificado input:focus,
+body.emg-unificado select:focus,
+body.emg-unificado textarea:focus{border-color:var(--emg-azul)!important; box-shadow:0 0 0 4px rgba(49,76,145,.12)!important;}
+body.emg-unificado button,
+body.emg-unificado .btn,
+body.emg-unificado input[type="button"],
+body.emg-unificado input[type="submit"]{
+  border:0!important; border-radius:14px!important; background:var(--emg-azul)!important; color:#fff!important; font-weight:800!important; padding:11px 16px!important; cursor:pointer!important; box-shadow:0 8px 18px rgba(49,76,145,.22)!important; transition:.18s ease!important;
+}
+body.emg-unificado button:hover,
+body.emg-unificado .btn:hover{background:var(--emg-azul-oscuro)!important; transform:translateY(-1px)!important;}
+body.emg-unificado table{border-collapse:separate!important; border-spacing:0!important; overflow:hidden!important; border-radius:16px!important; border:1px solid var(--emg-borde)!important; background:white!important;}
+body.emg-unificado th{background:#eef2ff!important; color:var(--emg-azul-oscuro)!important;}
+body.emg-unificado td, body.emg-unificado th{border-color:var(--emg-borde)!important;}
+.emg-mobile-menu{display:none;}
+@media(max-width:900px){
+  body.emg-unificado{padding-left:0!important; padding-top:72px!important;}
+  .emg-sidebar{transform:translateX(-102%); transition:.25s ease; width:270px;}
+  body.emg-menu-open .emg-sidebar{transform:translateX(0);}
+  .emg-topbar{left:0; height:72px; padding:0 16px!important;}
+  .emg-mobile-menu{display:inline-flex!important; margin-right:10px; box-shadow:none!important; padding:8px 11px!important;}
+  body.emg-unificado main, body.emg-unificado .app, body.emg-unificado .container{padding-left:16px!important; padding-right:16px!important;}
+}
+@media print{.emg-sidebar,.emg-topbar{display:none!important} body.emg-unificado{padding:0!important;background:white!important}}

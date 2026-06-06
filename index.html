@@ -221,8 +221,34 @@
       .section-title { display: block; }
     }
   </style>
+  <link rel="stylesheet" href="css/emgrisac-unificado.css" />
+  <script src="js/emgrisac-ui.js" defer></script>
 </head>
-<body>
+<body class="emg-unificado">
+
+<aside class="emg-sidebar">
+  <div class="emg-brand">
+    <img src="img/logo-emgrisac.png" alt="Logo EMGRISAC">
+    <div><strong>EMGRISAC</strong><span>Portal Técnico</span></div>
+  </div>
+  <nav class="emg-nav">
+    <a href="index.html" class="active"><span>🏠</span><span>Portal</span></a>
+<a href="optimizador.html" class=""><span>✂️</span><span>Optimizador</span></a>
+<a href="bocapez.html" class=""><span>🔩</span><span>Boca de pez</span></a>
+<a href="calcpesos.html" class=""><span>⚖️</span><span>Pesos</span></a>
+<a href="calculadora-pintura.html" class=""><span>🎨</span><span>Pintura</span></a>
+<a href="cotizador.html" class=""><span>📋</span><span>Cotizador</span></a>
+  </nav>
+  <div class="emg-sidebar-footer">Estructuras Metálicas<br>Herramientas internas v2.0</div>
+</aside>
+<header class="emg-topbar">
+  <div style="display:flex;align-items:center;gap:10px;">
+    <button class="emg-mobile-menu" data-emg-menu>☰</button>
+    <div class="emg-page-title"><strong>Portal Técnico</strong><span>Dashboard principal</span></div>
+  </div>
+  <div class="emg-chip">EMGRISAC Tools</div>
+</header>
+
   <header>
     <img src="img/logo-emgrisac.png" alt="Logo EMGRISAC" class="logo" />
     <div class="badge">Portal Técnico</div>
