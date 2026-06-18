@@ -1,49 +1,35 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Calculadora de Escaleras | EMGRISAC</title>
-  <style>
-    :root{
-      --azul:#0f2f57;--azul2:#143d6b;--naranja:#f28c28;--gris:#f3f5f8;--texto:#1f2937;
-      --verde:#16a34a;--amarillo:#ca8a04;--rojo:#dc2626;--borde:#d8dee8;--morado:#9333ea;
-    }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(135deg,#eef3f9,#ffffff);color:var(--texto)}
-    header{background:var(--azul);color:white;padding:16px 24px;border-bottom:5px solid var(--naranja)}
-    .brand{display:flex;align-items:center;gap:14px;max-width:1360px;margin:auto}
-    .logo{width:54px;height:54px;border-radius:14px;background:white;color:var(--azul);display:grid;place-items:center;font-weight:900;font-size:20px;border:3px solid var(--naranja)}
-    h1{margin:0;font-size:25px}.sub{margin:4px 0 0;color:#dbeafe;font-size:14px}
-    main{max-width:1360px;margin:20px auto;padding:0 16px;display:block}
-    .card{background:white;border:1px solid var(--borde);border-radius:18px;box-shadow:0 8px 24px rgba(15,47,87,.08);overflow:hidden;margin-bottom:16px}
-    .card h2{font-size:18px;margin:0;padding:14px 18px;background:#f8fafc;border-bottom:1px solid var(--borde);color:var(--azul)}
-    .content{padding:16px 18px}
-    .inputPanel{display:grid;grid-template-columns:310px 1fr auto;gap:16px;align-items:end}
-    .tabs{display:flex;background:#eef2f7;padding:6px;border-radius:14px}.tab{flex:1;text-align:center;padding:10px 16px;border-radius:10px;cursor:pointer;font-weight:bold;font-size:13px;color:#334155}.tab.active{background:var(--azul);color:white}
-    .formGrid{display:grid;grid-template-columns:repeat(6,minmax(130px,1fr));gap:12px;align-items:end}
-    .field{margin:0}label{display:block;font-size:13px;font-weight:bold;margin-bottom:6px;color:#334155}
-    input,select{width:100%;padding:10px 11px;border:1px solid #cbd5e1;border-radius:10px;font-size:14px;background:white}
-    .hint{font-size:12px;color:#64748b;margin-top:6px;line-height:1.35}
-    button{border:0;border-radius:12px;padding:12px 16px;font-weight:bold;cursor:pointer;background:var(--naranja);color:white;font-size:14px;white-space:nowrap}
-    button.secondary{background:var(--azul)}button.ghost{background:#e2e8f0;color:#0f2f57}
-    .hidden{display:none!important}
-    .summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin:14px 0}.selectedSummary{border-top:1px solid #e5e7eb;padding-top:14px}.metric{background:#f8fafc;border:1px solid var(--borde);border-radius:14px;padding:12px}.metric b{display:block;font-size:18px;color:var(--azul)}.metric span{font-size:12px;color:#64748b}
-    .tableWrap{overflow:auto}table{width:100%;border-collapse:collapse;font-size:13px;min-width:900px}th,td{padding:9px;border-bottom:1px solid #e5e7eb;text-align:center}th{background:#f8fafc;color:#334155}.pick{cursor:pointer}.pick:hover{background:#fff7ed}.selected{background:#ffedd5!important;outline:2px solid var(--naranja)}
-    .badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:12px;font-weight:bold}.ok{background:#dcfce7;color:var(--verde)}.mid{background:#fef3c7;color:var(--amarillo)}.bad{background:#fee2e2;color:var(--rojo)}
-    .canvasWrap{background:#f8fafc;border:1px solid var(--borde);border-radius:18px;padding:12px;margin-top:14px}.reportHead{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:10px}.reportHead h3{margin:0;color:var(--azul);font-size:18px}.actions{display:flex;gap:10px;flex-wrap:wrap}
-    .resultLine{font-size:13px;color:#334155;display:flex;gap:18px;flex-wrap:wrap;margin-bottom:8px}.resultLine b{color:#0f2f57}
-    svg{width:100%;height:560px;background:white;border-radius:12px;border:1px solid #e5e7eb}.note{background:#eff6ff;border-left:5px solid var(--azul);padding:12px;border-radius:10px;margin-top:12px;font-size:13px;line-height:1.45}
-    .footer{max-width:1360px;margin:8px auto 26px;padding:0 16px;color:#64748b;font-size:12px}
-    @media(max-width:1100px){.inputPanel{grid-template-columns:1fr}.formGrid{grid-template-columns:repeat(2,1fr)}.summary{grid-template-columns:repeat(2,1fr)}svg{height:430px}}
-    @media print{
-      @page{size:A4 landscape;margin:12mm}
-      body{background:white!important}.no-print,header,.inputCard,.tableOnly,.footer{display:none!important}
-      body *{visibility:hidden}#printArea,#printArea *{visibility:visible}#printArea{position:absolute;left:0;top:0;width:100%;background:white}.canvasWrap{border:0;box-shadow:none;margin:0;padding:0}.reportHead{display:block}.actions{display:none!important}svg{height:520px;border:1px solid #ccc}.note{border:1px solid #cbd5e1;border-left:5px solid var(--azul)}
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Calculadora de Escaleras | EMGRISAC</title>
+<style>
+:root{--azul:#123760;--azul2:#0b2747;--naranja:#f28c28;--gris:#f6f8fb;--texto:#1f2937;--borde:#d9e1ec;--verde:#16a34a;--rojo:#ef4444;--morado:#8b35e8;--azulLinea:#2563eb;--amarillo:#ca8a04}
+*{box-sizing:border-box} body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(135deg,#eef3f9,#fff);color:var(--texto)}
+header{background:var(--azul);color:white;border-bottom:5px solid var(--naranja);padding:16px 24px}.brand{max-width:1480px;margin:auto;display:flex;gap:14px;align-items:center}.logo{width:56px;height:56px;border:3px solid var(--naranja);background:white;color:var(--azul);border-radius:14px;display:grid;place-items:center;font-weight:900;font-size:20px}h1{font-size:26px;margin:0}.sub{margin:4px 0 0;color:#dbeafe;font-size:14px}
+main{max-width:1480px;margin:20px auto;padding:0 16px}.card{background:white;border:1px solid var(--borde);border-radius:18px;box-shadow:0 10px 28px rgba(18,55,96,.08);overflow:hidden;margin-bottom:16px}.card h2{font-size:18px;margin:0;padding:14px 18px;background:#f8fafc;border-bottom:1px solid var(--borde);color:var(--azul)}.content{padding:16px 18px}
+.inputPanel{display:grid;grid-template-columns:310px 1fr auto;gap:16px;align-items:end}.tabs{display:flex;background:#eef2f7;padding:6px;border-radius:14px}.tab{flex:1;text-align:center;padding:10px 16px;border-radius:10px;cursor:pointer;font-weight:bold;font-size:13px;color:#334155}.tab.active{background:var(--azul);color:white}.hint{font-size:12px;color:#64748b;line-height:1.35;margin-top:6px}.formGrid{display:grid;grid-template-columns:repeat(6,minmax(120px,1fr));gap:12px;align-items:end}.descansoGrid{display:grid;grid-template-columns:repeat(5,minmax(120px,1fr));gap:12px}label{display:block;font-size:13px;font-weight:bold;color:#334155;margin-bottom:6px}input,select{width:100%;padding:10px 11px;border:1px solid #cbd5e1;border-radius:10px;font-size:14px;background:white}button{border:0;border-radius:12px;padding:12px 16px;background:var(--naranja);color:white;font-size:14px;font-weight:bold;cursor:pointer;white-space:nowrap}.secondary{background:var(--azul)}.hidden{display:none!important}
+.theory{display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:14px}.theoryBox{background:#fff7ed;border:1px solid #fed7aa;border-left:5px solid var(--naranja);border-radius:14px;padding:14px;font-size:13px;line-height:1.45}.theoryBox b{color:var(--azul)}.formula{font-size:22px;font-weight:900;color:var(--azul);margin:4px 0}
+.summary{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin:14px 0}.metric{background:#f8fafc;border:1px solid var(--borde);border-radius:14px;padding:12px}.metric b{display:block;font-size:18px;color:var(--azul)}.metric span{font-size:12px;color:#64748b}.tableWrap{overflow:auto}table{width:100%;border-collapse:collapse;font-size:13px;min-width:1180px}th,td{padding:9px;border-bottom:1px solid #e5e7eb;text-align:center}th{background:#f8fafc;color:#334155}.pick{cursor:pointer}.pick:hover{background:#fff7ed}.selected{background:#ffedd5!important;outline:2px solid var(--naranja)}.badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:12px;font-weight:bold}.ok{background:#dcfce7;color:var(--verde)}.mid{background:#fef3c7;color:var(--amarillo)}.bad{background:#fee2e2;color:#dc2626}
+.canvasWrap{background:#f8fafc;border:1px solid var(--borde);border-radius:18px;padding:12px;margin-top:14px}.reportHead{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:10px}.reportHead h3{margin:0;color:var(--azul);font-size:18px}.resultLine{font-size:13px;color:#334155;display:flex;gap:18px;flex-wrap:wrap;margin-top:6px}.resultLine b{color:var(--azul)}.actions{display:flex;gap:10px;flex-wrap:wrap}svg{width:100%;height:620px;background:white;border:1px solid #e5e7eb;border-radius:12px}.note{background:#eff6ff;border-left:5px solid var(--azul);padding:12px;border-radius:10px;margin-top:12px;font-size:13px;line-height:1.45}.footer{max-width:1480px;margin:8px auto 26px;padding:0 16px;color:#64748b;font-size:12px}
+@media(max-width:1100px){.inputPanel{grid-template-columns:1fr}.formGrid,.descansoGrid{grid-template-columns:repeat(2,1fr)}.summary{grid-template-columns:repeat(2,1fr)}.theory{grid-template-columns:1fr}svg{height:480px}}
+</style>
+
   <link rel="stylesheet" href="css/emgrisac-unificado.css" />
   <script src="js/emgrisac-ui.js" defer></script>
+  <style>
+    /* Ajuste mínimo para conservar el ancho del gráfico original dentro del portal */
+    body.emg-unificado main{max-width:1480px!important;}
+    body.emg-unificado header:not(.emg-topbar){max-width:1480px!important;}
+    body.emg-unificado .summary{grid-template-columns:repeat(7,1fr)!important;}
+    body.emg-unificado svg#dibujo{height:620px!important;}
+    @media(max-width:1100px){
+      body.emg-unificado svg#dibujo{height:480px!important;}
+      body.emg-unificado .summary{grid-template-columns:repeat(2,1fr)!important;}
+    }
+  </style>
+
 </head>
 <body class="emg-unificado">
 
@@ -53,12 +39,12 @@
     <div><strong>EMGRISAC</strong><span>Portal Técnico</span></div>
   </div>
   <nav class="emg-nav">
-    <a href="index.html" class=""><span>🏠</span><span>Portal</span></a>
-    <a href="optimizador.html" class=""><span>✂️</span><span>Optimizador</span></a>
-    <a href="bocapez.html" class=""><span>🔩</span><span>Boca de pez</span></a>
-    <a href="calcpesos.html" class=""><span>⚖️</span><span>Pesos</span></a>
-    <a href="calculadora-pintura.html" class=""><span>🎨</span><span>Pintura</span></a>
-    <a href="cotizador.html" class=""><span>📋</span><span>Cotizador</span></a>
+    <a href="index.html"><span>🏠</span><span>Portal</span></a>
+    <a href="optimizador.html"><span>✂️</span><span>Optimizador</span></a>
+    <a href="bocapez.html"><span>🔩</span><span>Boca de pez</span></a>
+    <a href="calcpesos.html"><span>⚖️</span><span>Pesos</span></a>
+    <a href="calculadora-pintura.html"><span>🎨</span><span>Pintura</span></a>
+    <a href="cotizador.html"><span>📋</span><span>Cotizador</span></a>
     <a href="calculadora-escaleras.html" class="active"><span>🪜</span><span>Escalera</span></a>
   </nav>
   <div class="emg-sidebar-footer">Estructuras Metálicas<br>Herramientas internas v2.0</div>
@@ -66,155 +52,73 @@
 <header class="emg-topbar">
   <div style="display:flex;align-items:center;gap:10px;">
     <button class="emg-mobile-menu" data-emg-menu>☰</button>
-    <div class="emg-page-title"><strong>Calculadora de Escaleras</strong><span>Diseño preliminar de escalera metálica</span></div>
+    <div class="emg-page-title"><strong>Calculadora de Escaleras</strong><span>Huellas, contrapasos, Blondel y perfil metálico</span></div>
   </div>
   <div class="emg-chip">EMGRISAC Tools</div>
 </header>
 
-<header class="no-print">
-  <div class="brand"><div class="logo">EM</div><div><h1>Calculadora de Escaleras</h1><p class="sub">Portal Técnico EMGRISAC · prototipo de diseño preliminar</p></div></div>
-</header>
+<header><div class="brand"><div class="logo">EM</div><div><h1>Calculadora de Escaleras</h1><p class="sub">Portal Técnico EMGRISAC · prototipo de diseño preliminar</p></div></div></header>
 <main>
-  <section class="card inputCard no-print">
-    <h2>Datos de entrada</h2>
-    <div class="content inputPanel">
-      <div>
-        <div class="tabs"><div id="tabContinua" class="tab active" onclick="setMode('continua')">Sin descanso</div><div id="tabDescanso" class="tab" onclick="setMode('descanso')">Con descanso</div></div>
-        <div class="hint">La app busca opciones cómodas dentro del límite disponible.</div>
-      </div>
-      <div>
-        <div id="boxContinua" class="formGrid">
-          <div class="field"><label>Altura piso a piso (m)</label><input id="altura" type="number" value="3.00" step="0.01"></div>
-          <div class="field"><label>Longitud máxima (m)</label><input id="longitud" type="number" value="4.80" step="0.01"></div>
-          <div class="field"><label>Huella mínima (cm)</label><input id="hMin" type="number" value="25" step="1"></div>
-          <div class="field"><label>Huella ideal (cm)</label><input id="hIdeal" type="number" value="29" step="1"></div>
-          <div class="field"><label>Contrapaso mín. (cm)</label><input id="cMin" type="number" value="15" step="1"></div>
-          <div class="field"><label>Contrapaso máx. (cm)</label><input id="cMax" type="number" value="19" step="1"></div>
-        </div>
-        <div id="boxDescanso" class="formGrid hidden">
-          <div class="field"><label>Altura total (m)</label><input id="alturaD" type="number" value="3.00" step="0.01"></div>
-          <div class="field"><label>Altura descanso (m)</label><input id="alturaDescanso" type="number" value="1.50" step="0.01"></div>
-          <div class="field"><label>Largo descanso (m)</label><input id="largoDescanso" type="number" value="1.00" step="0.01"></div>
-          <div class="field"><label>Long. máx. tramo 1 (m)</label><input id="long1" type="number" value="2.40" step="0.01"></div>
-          <div class="field"><label>Long. máx. tramo 2 (m)</label><input id="long2" type="number" value="2.40" step="0.01"></div>
-          <div class="field"><label>Geometría</label><select id="tipoGiro"><option>Recta</option><option>L</option><option>U</option></select></div>
-        </div>
-      </div>
-      <button onclick="calcular()">Calcular opciones</button>
-    </div>
-  </section>
-
-  <section class="card">
-    <h2 class="tableOnly">Resultados</h2>
-    <div class="content">
-      <div class="summary tableOnly" id="summary"></div>
-      <div class="tableWrap tableOnly" id="tabla"></div>
-      <div id="printArea" class="canvasWrap">
-        <div class="reportHead">
-          <h3 id="tituloGrafico">Vista lateral</h3>
-          <div class="actions no-print"><button class="secondary" onclick="exportarPDF()">Exportar PDF</button></div>
-        </div>
-        <div class="resultLine" id="datosSeleccion"></div>
-        <svg id="dibujo" viewBox="0 0 1200 560"></svg>
-        <div class="note" id="nota">Selecciona “Calcular opciones” para generar alternativas.</div>
-      </div>
-    </div>
-  </section>
-</main>
-<div class="footer no-print">Nota: herramienta preliminar para estimación. Para construcción real debe verificarse con norma aplicable, arquitectura y condiciones de obra.</div>
+<section class="card"><h2>Datos de entrada</h2><div class="content"><div class="inputPanel">
+  <div><div class="tabs"><div id="tabContinua" class="tab active" onclick="setMode('continua')">Sin descanso</div><div id="tabDescanso" class="tab" onclick="setMode('descanso')">Con descanso</div></div><div class="hint">El modo con descanso sirve como base para recta, L o U. Por ahora se muestra la vista lateral.</div></div>
+  <div class="formGrid">
+    <div><label>Altura piso a piso (m)</label><input id="altura" type="number" value="3.00" step="0.01"></div>
+    <div id="boxContinua"><label>Longitud máxima disponible (m)</label><input id="longitud" type="number" value="4.80" step="0.01"><div class="hint">No obliga a usar todo el largo.</div></div>
+    <div id="boxDescanso" class="hidden" style="grid-column:span 5"><div class="descansoGrid">
+      <div><label>Geometría</label><select id="tipoGiro"><option value="recta">Recta</option><option value="L">En L</option><option value="U">En U</option></select></div>
+      <div><label>Altura del descanso (m)</label><input id="alturaDescanso" type="number" value="1.50" step="0.01"></div>
+      <div><label>Largo del descanso (m)</label><input id="largoDescanso" type="number" value="1.00" step="0.01"></div>
+      <div><label>Long. máx. tramo 1 (m)</label><input id="long1" type="number" value="2.40" step="0.01"></div>
+      <div><label>Long. máx. tramo 2 (m)</label><input id="long2" type="number" value="2.40" step="0.01"></div>
+    </div></div>
+    <div><label>Huella mínima (cm)</label><input id="hMin" type="number" value="25" step="1"></div>
+    <div><label>Huella ideal (cm)</label><input id="hIdeal" type="number" value="29" step="1"></div>
+    <div><label>Contrapaso mín. (cm)</label><input id="cMin" type="number" value="15" step="1"></div>
+    <div><label>Contrapaso máx. (cm)</label><input id="cMax" type="number" value="19" step="1"></div>
+  </div>
+  <button onclick="calcular()">Calcular opciones</button>
+</div></div></section>
+<section class="card"><h2>Concepto base: regla de Blondel</h2><div class="content theory"><div class="theoryBox"><b>¿Qué es Blondel?</b><p>Es una regla práctica para revisar si una escalera resulta cómoda. Relaciona la altura del contrapaso con la profundidad de la huella.</p><div class="formula">2C + H ≈ 60 a 64 cm</div></div><div class="theoryBox"><b>C = contrapaso</b><p>Es la altura que subes en cada escalón. Si es muy alto, la escalera cansa; si es muy bajo, puede quedar demasiado tendida.</p></div><div class="theoryBox"><b>H = huella</b><p>Es la superficie donde pisa el pie. En la tabla la llamamos <b>Long. huella</b> para no confundirla con la altura total.</p></div></div></section>
+<section class="card"><h2>Resultados</h2><div class="content"><div id="tabla" class="tableWrap"></div><div id="summary" class="summary"></div><div class="canvasWrap"><div class="reportHead"><div><h3 id="tituloGrafico">Vista lateral</h3><div id="lineaResultado" class="resultLine"></div></div><div class="actions"><button class="secondary" onclick="exportarPDF()">Exportar PDF</button></div></div><svg id="dibujo" viewBox="0 0 1200 650"></svg></div><div id="nota" class="note">Selecciona “Calcular opciones” para generar alternativas.</div></div></section>
+</main><div class="footer">Nota: herramienta preliminar para estimación. Para construcción real debe verificarse con norma aplicable, arquitectura y condiciones de obra.</div>
 <script>
-let modo='continua'; let ultimaSeleccion=null;
+let modo='continua', opsActual=[], seleccion=null;
 function setMode(m){modo=m;document.getElementById('boxContinua').classList.toggle('hidden',m!=='continua');document.getElementById('boxDescanso').classList.toggle('hidden',m!=='descanso');document.getElementById('tabContinua').classList.toggle('active',m==='continua');document.getElementById('tabDescanso').classList.toggle('active',m==='descanso');calcular();}
-function val(id){return parseFloat(document.getElementById(id).value)||0}
-function evaluar(c,h,b,ang,entra){
-  const hMin=val('hMin')||25;
-  if(!entra || c<13 || c>21 || h<hMin-1 || h<22 || b<57 || b>67) return ['No recomendable','bad'];
-  if(c>=16&&c<=18.5&&h>=27&&h<=31&&b>=60&&b<=64&&ang>=28&&ang<=38) return ['Excelente','ok'];
-  return ['Aceptable','mid'];
-}
-function score(c,h,b,ang,entra){ if(!entra) return 9999; return Math.abs(c-17.5)*5+Math.abs(h-29)*3+Math.abs(b-63)*4+Math.abs(ang-32)*2; }
-function perfilTramo(alturaM,longUsadaM,cCm){
-  const cM=cCm/100;
-  return cM + Math.sqrt(Math.pow(longUsadaM,2)+Math.pow(Math.max(0,alturaM-cM),2));
-}
-function calcTramo(alturaM,longMaxM,nContrapasos,hIdeal){
-  let c=alturaM*100/nContrapasos;
-  let huellas=Math.max(1,nContrapasos-1);
-  let h=Math.min(hIdeal,longMaxM*100/huellas);
-  let longUsada=huellas*h/100;
-  let b=2*c+h;
-  let ang=Math.atan(c/h)*180/Math.PI;
-  let inclinada=Math.sqrt(Math.pow(alturaM,2)+Math.pow(longUsada,2));
-  let perfil=perfilTramo(alturaM,longUsada,c);
-  let entra=longUsada<=longMaxM+0.0001;
-  let ev=evaluar(c,h,b,ang,entra);
-  return {n:nContrapasos,c,h,huellas,longUsada,b,ang,inclinada,perfil,entra,ev:ev[0],cls:ev[1],puntaje:score(c,h,b,ang,entra)};
-}
-function calcular(){ultimaSeleccion=null; const hIdeal=val('hIdeal'), cMin=val('cMin'), cMax=val('cMax'); if(modo==='continua') calcularContinua(val('altura'),hIdeal,cMin,cMax); else calcularDescanso(val('alturaD'),hIdeal,cMin,cMax);}
-function calcularContinua(altura,hIdeal,cMin,cMax){
-  const longMax=val('longitud'); let ops=[];
-  for(let n=8;n<=30;n++){let r=calcTramo(altura,longMax,n,hIdeal); if(r.c>=cMin-3 && r.c<=cMax+3) ops.push(r);}
-  ops.sort((a,b)=>a.puntaje-b.puntaje); renderTablaContinua(ops.slice(0,10));
-}
-function calcularDescanso(altura,hIdeal,cMin,cMax){
-  const hd=val('alturaDescanso'), l1=val('long1'), l2=val('long2'), descanso=val('largoDescanso'); let h1=hd, h2=altura-hd, ops=[];
-  if(h1<=0||h2<=0){document.getElementById('tabla').innerHTML='<p>La altura del descanso debe estar entre 0 y la altura total.</p>';return}
-  for(let n1=3;n1<=20;n1++) for(let n2=3;n2<=20;n2++){
-    let a=calcTramo(h1,l1,n1,hIdeal), b=calcTramo(h2,l2,n2,hIdeal);
-    let cProm=(a.c+b.c)/2, hProm=(a.h+b.h)/2, blondelProm=(a.b+b.b)/2, angProm=(a.ang+b.ang)/2;
-    let entra=a.entra&&b.entra, ev=evaluar(cProm,hProm,blondelProm,angProm,entra);
-    if(a.c>=cMin-3&&a.c<=cMax+3&&b.c>=cMin-3&&b.c<=cMax+3){
-      ops.push({a,b,total:n1+n2,descanso,perfil:a.perfil+b.perfil+descanso,entra,ev:ev[0],cls:ev[1],puntaje:a.puntaje+b.puntaje+Math.abs(a.c-b.c)*3});
-    }
-  }
-  ops.sort((x,y)=>x.puntaje-y.puntaje); renderTablaDescanso(ops.slice(0,10));
-}
-function renderSummary(items){document.getElementById('summary').innerHTML=items.map(x=>`<div class="metric"><b>${x.v}</b><span>${x.t}</span></div>`).join('')}
-function renderTablaContinua(ops){
-  renderSummary([{v:ops.length,t:'opciones mostradas'},{v:ops[0]?ops[0].n:'-',t:'mejor n.º contrapasos'},{v:ops[0]?ops[0].c.toFixed(1)+' cm':'-',t:'contrapaso'},{v:ops[0]?ops[0].h.toFixed(1)+' cm':'-',t:'huella'},{v:ops[0]?ops[0].perfil.toFixed(2)+' m':'-',t:'longitud del perfil'}]);
-  let html='<table><tr><th>Opción</th><th>Contrapasos</th><th>Huellas</th><th>Contrapaso</th><th>Huella</th><th>Blondel</th><th>Ángulo</th><th>Long. usada</th><th>Perfil</th><th>Estado</th></tr>';
-  ops.forEach((o,i)=>html+=`<tr class="pick" onclick="seleccionarContinua(${i})" id="row${i}"><td>${i+1}</td><td>${o.n}</td><td>${o.huellas}</td><td>${o.c.toFixed(1)} cm</td><td>${o.h.toFixed(1)} cm</td><td>${o.b.toFixed(1)} cm</td><td>${o.ang.toFixed(1)}°</td><td>${o.longUsada.toFixed(2)} m</td><td>${o.perfil.toFixed(2)} m</td><td><span class="badge ${o.cls}">${o.ev}</span></td></tr>`);
-  html+='</table>'; document.getElementById('tabla').innerHTML=html; window.opsActual=ops; if(ops[0]) seleccionarContinua(0);
-}
-function renderTablaDescanso(ops){
-  renderSummary([{v:ops.length,t:'opciones mostradas'},{v:ops[0]?ops[0].total:'-',t:'contrapasos totales'},{v:ops[0]?ops[0].a.n+' + '+ops[0].b.n:'-',t:'tramos'},{v:ops[0]?ops[0].perfil.toFixed(2)+' m':'-',t:'perfil total aprox.'},{v:ops[0]?ops[0].ev:'-',t:'evaluación'}]);
-  let html='<table><tr><th>Opción</th><th>Tramo 1</th><th>Tramo 2</th><th>C1/C2</th><th>Huella 1/2</th><th>Ángulos</th><th>Longitudes</th><th>Perfil total</th><th>Estado</th></tr>';
-  ops.forEach((o,i)=>html+=`<tr class="pick" onclick="seleccionarDescanso(${i})" id="row${i}"><td>${i+1}</td><td>${o.a.n} contr.</td><td>${o.b.n} contr.</td><td>${o.a.c.toFixed(1)} / ${o.b.c.toFixed(1)} cm</td><td>${o.a.h.toFixed(1)} / ${o.b.h.toFixed(1)} cm</td><td>${o.a.ang.toFixed(1)}° / ${o.b.ang.toFixed(1)}°</td><td>${o.a.longUsada.toFixed(2)} / ${o.b.longUsada.toFixed(2)} m</td><td>${o.perfil.toFixed(2)} m</td><td><span class="badge ${o.cls}">${o.ev}</span></td></tr>`);
-  html+='</table>'; document.getElementById('tabla').innerHTML=html; window.opsActual=ops; if(ops[0]) seleccionarDescanso(0);
-}
-function limpiarSel(i){document.querySelectorAll('tr').forEach(r=>r.classList.remove('selected')); let row=document.getElementById('row'+i); if(row)row.classList.add('selected')}
-function datosHTML(items){return items.map(x=>`<span><b>${x.k}:</b> ${x.v}</span>`).join('')}
-function seleccionarContinua(i){limpiarSel(i);let o=opsActual[i];seleccion={tipo:'continua',o};renderSummary([{v:'Opción '+(i+1),t:'opción seleccionada'},{v:o.n,t:'N° de contrapasos'},{v:o.huellas,t:'N° de huellas'},{v:o.c.toFixed(1)+' cm',t:'altura contrapaso'},{v:o.h.toFixed(1)+' cm',t:'longitud de huella'},{v:o.longUsada.toFixed(2)+' m',t:'longitud usada'},{v:o.perfil.toFixed(2)+' m',t:'longitud del perfil'}]);document.getElementById('tituloGrafico').textContent='Vista lateral - Escalera recta sin descanso';document.getElementById('lineaResultado').innerHTML=`<span><b>Contrapaso:</b> ${o.c.toFixed(1)} cm</span><span><b>Huella:</b> ${o.h.toFixed(1)} cm</span><span><b>Ángulo:</b> ${o.ang.toFixed(1)}°</span><span><b>Long. usada:</b> ${o.longUsada.toFixed(2)} m</span><span><b>Longitud del perfil:</b> ${o.perfil.toFixed(2)} m</span>`;dibujarContinua(o);document.getElementById('nota').innerHTML=`Opción seleccionada: <b>${o.n} contrapasos</b>, <b>${o.huellas} huellas</b>. Longitud del perfil metálico aproximada: <b>${o.perfil.toFixed(2)} m</b>.`}
-function seleccionarDescanso(i){limpiarSel(i);let o=opsActual[i];seleccion={tipo:'descanso',o};renderSummary([{v:'Opción '+(i+1),t:'opción seleccionada'},{v:o.total,t:'N° contrapasos total'},{v:o.a.n+' + '+o.b.n,t:'contrapasos T1 + T2'},{v:o.a.huellas+' + '+o.b.huellas,t:'huellas T1 + T2'},{v:o.a.longUsada.toFixed(2)+' + '+o.b.longUsada.toFixed(2)+' m',t:'longitud usada T1 + T2'},{v:o.descanso.toFixed(2)+' m',t:'descanso'},{v:o.perfil.toFixed(2)+' m',t:'longitud del perfil'}]);document.getElementById('tituloGrafico').textContent='Vista conceptual - Escalera con descanso';document.getElementById('lineaResultado').innerHTML=`<span><b>Tramo 1:</b> ${o.a.n} contr.</span><span><b>Tramo 2:</b> ${o.b.n} contr.</span><span><b>Longitud del perfil:</b> ${o.perfil.toFixed(2)} m</span>`;dibujarDescanso(o);document.getElementById('nota').innerHTML=`Opción seleccionada: tramo 1 con <b>${o.a.n}</b> contrapasos y tramo 2 con <b>${o.b.n}</b>. Longitud del perfil metálico aproximada: <b>${o.perfil.toFixed(2)} m</b>.`}
-function dibujarContinua(o){
-  let svg=svgBase(); svg.setAttribute('viewBox','0 0 1200 560'); svg.innerHTML='';
-  let contrapasos=o.n, huellas=o.huellas, pasoCm=o.h, contraCm=o.c, alturaCm=contrapasos*contraCm, longitudCm=huellas*pasoCm;
-  let margenIzq=115, margenDer=95, margenSup=42, margenInf=105; let anchoUtil=1200-margenIzq-margenDer, altoUtil=560-margenSup-margenInf;
-  let escala=Math.min(anchoUtil/longitudCm, altoUtil/alturaCm); let x0=margenIzq, ySuelo=margenSup+alturaCm*escala, dx=pasoCm*escala, dy=contraCm*escala;
-  let xTop=x0+longitudCm*escala, yTop=ySuelo-alturaCm*escala, yPrimerPaso=ySuelo-dy;
-  line(svg,55,ySuelo,xTop+75,ySuelo,'#111827',3); line(svg,xTop,yTop,xTop+95,yTop,'#111827',3);
-  for(let i=0;i<huellas;i++){let x=x0+dx*i, y=ySuelo-dy*(i+1); line(svg,x,y+dy,x,y,'#2563eb',2.5); line(svg,x,y,x+dx,y,'#22c55e',2.5)}
-  line(svg,xTop,yTop+dy,xTop,yTop,'#2563eb',2.5);
-  line(svg,x0,ySuelo,x0,yPrimerPaso,'#ef4444',5); line(svg,x0,yPrimerPaso,xTop,yTop,'#ef4444',5);
-  // Contrapaso
-  let cX=x0-45; line(svg,cX,ySuelo,cX,yPrimerPaso,'#9333ea',2); line(svg,cX-10,ySuelo,cX+10,ySuelo,'#9333ea',2); line(svg,cX-10,yPrimerPaso,cX+10,yPrimerPaso,'#9333ea',2); line(svg,cX,ySuelo,x0,ySuelo,'#9333ea',1.4,'5 5'); line(svg,cX,yPrimerPaso,x0,yPrimerPaso,'#9333ea',1.4,'5 5'); text(svg,cX-14,(ySuelo+yPrimerPaso)/2+5,`${contraCm.toFixed(1)} cm`,'#7c3aed',16,'700','end'); text(svg,cX-14,(ySuelo+yPrimerPaso)/2+24,'Contrapaso','#7c3aed',12,'700','end');
-  // Huella en escalón bajo, fuera de líneas principales
-  let idx=Math.max(1,Math.min(huellas-2,Math.floor(huellas*0.23))); let hx=x0+dx*idx, hy=ySuelo-dy*(idx+1), yCota=Math.min(hy+42,ySuelo-10);
-  line(svg,hx,hy,hx,yCota,'#16a34a',1.5,'5 5'); line(svg,hx+dx,hy,hx+dx,yCota,'#16a34a',1.5,'5 5'); line(svg,hx,yCota,hx+dx,yCota,'#16a34a',2); text(svg,hx+dx/2,yCota+22,`Huella: ${pasoCm.toFixed(1)} cm`,'#16a34a',15,'700','middle');
-  // Ángulo
-  let ax=x0+dx*2.1, ay=ySuelo-dy*2.1; line(svg,ax,ay,ax+72,ay,'#9333ea',1.8,'6 5'); let r=55, angRad=o.ang*Math.PI/180, ex=ax+r*Math.cos(angRad), ey=ay-r*Math.sin(angRad); svg.innerHTML+=`<path d="M ${ax+r} ${ay} A ${r} ${r} 0 0 0 ${ex} ${ey}" fill="none" stroke="#9333ea" stroke-width="2"/>`; text(svg,ax+60,ay-24,`${o.ang.toFixed(1)}°`,'#9333ea',16,'700');
-  // Leyenda
-  let ly=525; line(svg,125,ly,195,ly,'#ef4444',5); text(svg,210,ly+5,'Perfil metálico','#334155',13,'700'); line(svg,380,ly,450,ly,'#22c55e',3); text(svg,465,ly+5,'Huella / paso','#334155',13,'700'); line(svg,625,ly,695,ly,'#2563eb',3); text(svg,710,ly+5,'Contrapaso','#334155',13,'700');
-}
-function dibujarDescanso(o){
-  let svg=svgBase(); svg.setAttribute('viewBox','0 0 1200 560'); svg.innerHTML=''; let tipo=document.getElementById('tipoGiro').value;
-  text(svg,45,40,`Escalera con descanso · ${tipo}`,'#0f2f57',22,'800');
-  let x0=100,y0=465,xd=490,yd=295,desc=150,x2=1070,y2=90;
-  line(svg,55,y0,1120,y0,'#111827',3); line(svg,x0,y0,x0,y0-45,'#ef4444',5); line(svg,x0,y0-45,xd,yd,'#ef4444',5); line(svg,xd,yd,xd+desc,yd,'#0f2f57',6); line(svg,xd+desc,yd,xd+desc,yd-45,'#ef4444',5); line(svg,xd+desc,yd-45,x2,y2,'#ef4444',5); line(svg,x2,y2,x2+80,y2,'#111827',3);
-  text(svg,xd+desc/2,yd-12,'Descanso','#0f2f57',14,'800','middle'); text(svg,160,355,`Tramo 1: ${o.a.n} contrapasos`,'#334155',14,'700'); text(svg,750,210,`Tramo 2: ${o.b.n} contrapasos`,'#334155',14,'700');
-  text(svg,45,525,`Perfil total aprox.: ${o.perfil.toFixed(2)} m  |  Tipo en planta: ${tipo}  |  Descanso: ${o.descanso.toFixed(2)} m`,'#334155',14,'700');
-}
-function exportarPDF(){window.print()}
+function val(id){return parseFloat(document.getElementById(id).value)||0;}
+function evaluar(c,h,b,ang,entra){if(!entra||c<13||c>21||h<22||b<57||b>67)return['No recomendable','bad'];if(c>=16&&c<=18.5&&h>=27&&h<=31&&b>=60&&b<=64&&ang>=28&&ang<=38)return['Excelente','ok'];return['Aceptable','mid'];}
+function score(c,h,b,ang,entra){if(!entra)return 9999;return Math.abs(c-17.5)*5+Math.abs(h-29)*3+Math.abs(b-63)*4+Math.abs(ang-32)*2;}
+function calcTramo(alturaM,longMaxM,nContrapasos,hIdeal){let c=alturaM*100/nContrapasos;let huellas=Math.max(1,nContrapasos-1);let h=Math.min(hIdeal,longMaxM*100/huellas);let longUsada=huellas*h/100;let b=2*c+h;let ang=Math.atan(c/h)*180/Math.PI;let alturaDiagonal=Math.max(0,alturaM-(c/100));let perfil=(c/100)+Math.hypot(longUsada,alturaDiagonal);let entra=longUsada<=longMaxM+0.0001;let ev=evaluar(c,h,b,ang,entra);return{n:nContrapasos,c,h,huellas,longUsada,b,ang,perfil,entra,ev:ev[0],cls:ev[1],puntaje:score(c,h,b,ang,entra),alturaM};}
+function calcular(){seleccion=null;let altura=val('altura'),hIdeal=val('hIdeal'),cMin=val('cMin'),cMax=val('cMax');if(altura<=0)return;if(modo==='continua')calcularContinua(altura,hIdeal,cMin,cMax);else calcularDescanso(altura,hIdeal,cMin,cMax);}
+function calcularContinua(altura,hIdeal,cMin,cMax){let longMax=val('longitud'),ops=[];for(let n=8;n<=32;n++){let r=calcTramo(altura,longMax,n,hIdeal);if(r.c>=cMin-3&&r.c<=cMax+3)ops.push(r);}ops.sort((a,b)=>a.puntaje-b.puntaje);renderTablaContinua(ops.slice(0,10));}
+function calcularDescanso(altura,hIdeal,cMin,cMax){let hd=val('alturaDescanso'),l1=val('long1'),l2=val('long2'),descanso=val('largoDescanso');if(hd<=0||hd>=altura){document.getElementById('tabla').innerHTML='<p>La altura del descanso debe estar entre 0 y la altura piso a piso.</p>';return;}let h1=hd,h2=altura-hd,ops=[];for(let n1=3;n1<=22;n1++){for(let n2=3;n2<=22;n2++){let a=calcTramo(h1,l1,n1,hIdeal),b=calcTramo(h2,l2,n2,hIdeal);let cProm=(a.c+b.c)/2,hProm=(a.h+b.h)/2,blondelProm=(a.b+b.b)/2,angProm=(a.ang+b.ang)/2,entra=a.entra&&b.entra;let ev=evaluar(cProm,hProm,blondelProm,angProm,entra);if(a.c>=cMin-3&&a.c<=cMax+3&&b.c>=cMin-3&&b.c<=cMax+3){ops.push({a,b,total:n1+n2,descanso,entra,ev:ev[0],cls:ev[1],perfil:a.perfil+descanso+b.perfil,puntaje:a.puntaje+b.puntaje+Math.abs(a.c-b.c)*3});}}}ops.sort((x,y)=>x.puntaje-y.puntaje);renderTablaDescanso(ops.slice(0,10));}
+function renderSummary(items){document.getElementById('summary').innerHTML=items.map(x=>`<div class="metric"><b>${x.v}</b><span>${x.t}</span></div>`).join('');}
+function renderTablaContinua(ops){opsActual=ops;renderSummary([{v:ops.length,t:'opciones mostradas'},{v:ops[0]?ops[0].n:'-',t:'mejor n.° de contrapasos'},{v:ops[0]?ops[0].c.toFixed(1)+' cm':'-',t:'altura contrapaso'},{v:ops[0]?ops[0].h.toFixed(1)+' cm':'-',t:'long. huella'},{v:ops[0]?ops[0].perfil.toFixed(2)+' m':'-',t:'longitud del perfil'}]);let html='<table><tr><th>Opción</th><th>N° de contrapasos</th><th>N° de huellas</th><th>Altura contrapaso</th><th>Long. huella</th><th>Blondel</th><th>Ángulo</th><th>Long. usada</th><th>Longitud del perfil</th><th>Estado</th></tr>';ops.forEach((o,i)=>html+=`<tr class="pick" onclick="seleccionarContinua(${i})" id="row${i}"><td>${i+1}</td><td>${o.n}</td><td>${o.huellas}</td><td>${o.c.toFixed(1)} cm</td><td>${o.h.toFixed(1)} cm</td><td>${o.b.toFixed(1)} cm</td><td>${o.ang.toFixed(1)}°</td><td>${o.longUsada.toFixed(2)} m</td><td>${o.perfil.toFixed(2)} m</td><td><span class="badge ${o.cls}">${o.ev}</span></td></tr>`);html+='</table>';document.getElementById('tabla').innerHTML=html;if(ops[0])seleccionarContinua(0);}
+function renderTablaDescanso(ops){opsActual=ops;renderSummary([{v:ops.length,t:'opciones mostradas'},{v:ops[0]?ops[0].total:'-',t:'N° contrapasos total'},{v:ops[0]?ops[0].a.n+' + '+ops[0].b.n:'-',t:'contrapasos por tramo'},{v:ops[0]?ops[0].a.longUsada.toFixed(2)+' + '+ops[0].b.longUsada.toFixed(2)+' m':'-',t:'long. usada por tramo'},{v:ops[0]?ops[0].perfil.toFixed(2)+' m':'-',t:'longitud del perfil'}]);let html='<table><tr><th>Opción</th><th>N° contrap. T1</th><th>N° huellas T1</th><th>N° contrap. T2</th><th>N° huellas T2</th><th>Altura contrapaso T1/T2</th><th>Long. huella T1/T2</th><th>Blondel T1/T2</th><th>Ángulo T1/T2</th><th>Long. usada T1/T2</th><th>Longitud del perfil</th><th>Estado</th></tr>';ops.forEach((o,i)=>html+=`<tr class="pick" onclick="seleccionarDescanso(${i})" id="row${i}"><td>${i+1}</td><td>${o.a.n}</td><td>${o.a.huellas}</td><td>${o.b.n}</td><td>${o.b.huellas}</td><td>${o.a.c.toFixed(1)} / ${o.b.c.toFixed(1)} cm</td><td>${o.a.h.toFixed(1)} / ${o.b.h.toFixed(1)} cm</td><td>${o.a.b.toFixed(1)} / ${o.b.b.toFixed(1)} cm</td><td>${o.a.ang.toFixed(1)}° / ${o.b.ang.toFixed(1)}°</td><td>${o.a.longUsada.toFixed(2)} / ${o.b.longUsada.toFixed(2)} m</td><td>${o.perfil.toFixed(2)} m</td><td><span class="badge ${o.cls}">${o.ev}</span></td></tr>`);html+='</table>';document.getElementById('tabla').innerHTML=html;if(ops[0])seleccionarDescanso(0);}
+function limpiarSel(i){document.querySelectorAll('tr').forEach(r=>r.classList.remove('selected'));let row=document.getElementById('row'+i);if(row)row.classList.add('selected');}
+function seleccionarContinua(i){limpiarSel(i);let o=opsActual[i];seleccion={tipo:'continua',o};renderSummary([{v:'Opción '+(i+1),t:'opción seleccionada'},{v:o.n,t:'N° de contrapasos'},{v:o.huellas,t:'N° de huellas'},{v:o.c.toFixed(1)+' cm',t:'altura contrapaso'},{v:o.h.toFixed(1)+' cm',t:'longitud de huella'},{v:o.longUsada.toFixed(2)+' m',t:'longitud usada'},{v:o.perfil.toFixed(2)+' m',t:'longitud del perfil'}]);document.getElementById('tituloGrafico').textContent='Vista lateral - Escalera recta sin descanso';document.getElementById('lineaResultado').innerHTML=`<span><b>Contrapaso:</b> ${o.c.toFixed(1)} cm</span><span><b>Huella:</b> ${o.h.toFixed(1)} cm</span><span><b>Ángulo:</b> ${o.ang.toFixed(1)}°</span><span><b>Long. usada:</b> ${o.longUsada.toFixed(2)} m</span><span><b>Longitud del perfil:</b> ${o.perfil.toFixed(2)} m</span>`;dibujarContinua(o);document.getElementById('nota').innerHTML=`Opción seleccionada: <b>${o.n} contrapasos</b>, <b>${o.huellas} huellas</b>. Longitud del perfil metálico aproximada: <b>${o.perfil.toFixed(2)} m</b>.`;}
+function seleccionarDescanso(i){limpiarSel(i);let o=opsActual[i];seleccion={tipo:'descanso',o};let tipo=document.getElementById('tipoGiro').value;renderSummary([{v:'Opción '+(i+1),t:'opción seleccionada'},{v:o.total,t:'N° contrapasos total'},{v:o.a.n+' + '+o.b.n,t:'contrapasos por tramo'},{v:o.a.huellas+' + '+o.b.huellas,t:'huellas por tramo'},{v:o.a.longUsada.toFixed(2)+' + '+o.b.longUsada.toFixed(2)+' m',t:'long. usada por tramo'},{v:o.descanso.toFixed(2)+' m',t:'largo del descanso'},{v:o.perfil.toFixed(2)+' m',t:'longitud del perfil'}]);document.getElementById('tituloGrafico').textContent=`Vista lateral - Escalera con descanso (${tipo})`;document.getElementById('lineaResultado').innerHTML=`<span><b>Tramo 1:</b> ${o.a.n} contrap. / ${o.a.huellas} huellas</span><span><b>Tramo 2:</b> ${o.b.n} contrap. / ${o.b.huellas} huellas</span><span><b>Descanso:</b> ${o.descanso.toFixed(2)} m</span><span><b>Longitud del perfil:</b> ${o.perfil.toFixed(2)} m</span>`;dibujarDescanso(o);document.getElementById('nota').innerHTML=`Opción seleccionada con descanso: tramo 1 sube hasta <b>${val('alturaDescanso').toFixed(2)} m</b> y tramo 2 completa hasta <b>${val('altura').toFixed(2)} m</b>. Longitud del perfil metálico aproximada: <b>${o.perfil.toFixed(2)} m</b>.`;}
+function L(svg,x1,y1,x2,y2,c,w=2,d=''){svg.innerHTML+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${c}" stroke-width="${w}" ${d?`stroke-dasharray="${d}"`:''} stroke-linecap="round"/>`;}
+function T(svg,x,y,t,c='#0f2f57',s=15,w='600',a='start'){svg.innerHTML+=`<text x="${x}" y="${y}" fill="${c}" font-size="${s}" font-weight="${w}" text-anchor="${a}" font-family="Arial, Helvetica, sans-serif">${t}</text>`;}
+function dibujarContinua(o){let svg=document.getElementById('dibujo');svg.setAttribute('viewBox','0 0 1200 650');svg.innerHTML='';let n=o.n,huellas=o.huellas,paso=o.h,contra=o.c,alturaCm=n*contra,longitudCm=huellas*paso;let mL=95,mR=85,mT=58,mB=105,ancho=1200-mL-mR,alto=650-mT-mB,esc=Math.min(ancho/longitudCm,alto/alturaCm);let x0=mL,ySuelo=mT+alturaCm*esc,dx=paso*esc,dy=contra*esc,xTop=x0+longitudCm*esc,yTop=ySuelo-alturaCm*esc,yPrimer=ySuelo-dy;L(svg,40,ySuelo,xTop+140,ySuelo,'#111827',3);L(svg,xTop,yTop,xTop+155,yTop,'#111827',3);for(let i=0;i<huellas;i++){let x=x0+dx*i,y=ySuelo-dy*(i+1);L(svg,x,y+dy,x,y,'#2563eb',3);L(svg,x,y,x+dx,y,'#22c55e',3);}L(svg,xTop,yTop+dy,xTop,yTop,'#2563eb',3);L(svg,x0,ySuelo,x0,yPrimer,'#ef4444',6);L(svg,x0,yPrimer,xTop,yTop,'#ef4444',6);
+let cx=x0-42;L(svg,cx,ySuelo,cx,yPrimer,'#7c3aed',2);L(svg,cx-13,ySuelo,cx+13,ySuelo,'#7c3aed',2);L(svg,cx-13,yPrimer,cx+13,yPrimer,'#7c3aed',2);L(svg,cx,ySuelo,x0,ySuelo,'#7c3aed',1.5,'6 6');L(svg,cx,yPrimer,x0,yPrimer,'#7c3aed',1.5,'6 6');T(svg,cx-16,(ySuelo+yPrimer)/2+5,`${contra.toFixed(1)} cm`,'#7c3aed',16,'800','end');T(svg,cx-16,(ySuelo+yPrimer)/2+24,'contrapaso','#7c3aed',12,'700','end');
+let idx=Math.max(2,Math.min(huellas-4,Math.floor(huellas*.38)));let hx=x0+dx*idx,hy=ySuelo-dy*(idx+1),yc=hy+48;L(svg,hx,hy,hx,yc,'#16a34a',1.5,'6 6');L(svg,hx+dx,hy,hx+dx,yc,'#16a34a',1.5,'6 6');L(svg,hx,yc,hx+dx,yc,'#16a34a',2.5);T(svg,hx+dx/2,yc+23,`Huella: ${paso.toFixed(1)} cm`,'#16a34a',16,'800','middle');
+let ax=xTop-dx*2.2,ay=yTop+dy*1.15,r=52,rad=o.ang*Math.PI/180;L(svg,ax,ay,ax+r,ay,'#9333ea',2,'7 6');L(svg,ax,ay,ax+r*Math.cos(-rad),ay+r*Math.sin(-rad),'#9333ea',2,'7 6');svg.innerHTML+=`<path d="M ${ax+r} ${ay} A ${r} ${r} 0 0 0 ${ax+r*Math.cos(-rad)} ${ay+r*Math.sin(-rad)}" fill="none" stroke="#9333ea" stroke-width="3"/>`;T(svg,ax+r+12,ay-12,`${o.ang.toFixed(1)}°`,'#9333ea',18,'800');
+let yDim=ySuelo+48;L(svg,x0,ySuelo,x0,yDim,'#9333ea',1.5,'6 6');L(svg,xTop,yTop,xTop,yDim,'#9333ea',1.5,'6 6');L(svg,x0,yDim,xTop,yDim,'#9333ea',2);T(svg,(x0+xTop)/2,yDim+24,`Longitud usada: ${o.longUsada.toFixed(2)} m`,'#9333ea',16,'800','middle');let xDim=xTop+65;L(svg,xTop,yTop,xDim,yTop,'#9333ea',1.5,'6 6');L(svg,x0,ySuelo,xDim,ySuelo,'#9333ea',1.5,'6 6');L(svg,xDim,yTop,xDim,ySuelo,'#9333ea',2);T(svg,xDim+14,(yTop+ySuelo)/2,`Altura total: ${val('altura').toFixed(2)} m`,'#9333ea',16,'800','start');let ly=625;L(svg,220,ly,270,ly,'#ef4444',5);T(svg,282,ly+5,'Perfil metálico','#334155',13,'700');L(svg,450,ly,500,ly,'#22c55e',5);T(svg,512,ly+5,'Huella','#334155',13,'700');L(svg,625,ly,675,ly,'#2563eb',5);T(svg,687,ly+5,'Contrapaso','#334155',13,'700');}
+function dibujarDescanso(o){let svg=document.getElementById('dibujo');svg.setAttribute('viewBox','0 0 1200 650');svg.innerHTML='';let hTotal=val('altura'),hDesc=val('alturaDescanso'),descM=o.descanso,a=o.a,b=o.b;let totalCm=a.longUsada*100+descM*100+b.longUsada*100,alturaCm=hTotal*100;let mL=105,mR=125,mT=58,mB=120,ancho=1200-mL-mR,alto=650-mT-mB,esc=Math.min(ancho/totalCm,alto/alturaCm);let x0=mL,ySuelo=mT+alturaCm*esc,dx1=a.h*esc,dy1=a.c*esc,dx2=b.h*esc,dy2=b.c*esc;let xLand=x0+a.longUsada*100*esc,yLand=ySuelo-hDesc*100*esc,xLand2=xLand+descM*100*esc,xTop=xLand2+b.longUsada*100*esc,yTop=ySuelo-alturaCm*esc;
+L(svg,40,ySuelo,xTop+95,ySuelo,'#111827',3);L(svg,xLand,yLand,xLand2,yLand,'#111827',5);L(svg,xTop,yTop,xTop+105,yTop,'#111827',3);T(svg,xLand+(xLand2-xLand)/2,yLand-12,'DESCANSO','#0f2f57',14,'800','middle');
+for(let i=0;i<a.huellas;i++){let x=x0+dx1*i,y=ySuelo-dy1*(i+1);L(svg,x,y+dy1,x,y,'#2563eb',3);L(svg,x,y,x+dx1,y,'#22c55e',3);}L(svg,xLand,yLand+dy1,xLand,yLand,'#2563eb',3);
+for(let i=0;i<b.huellas;i++){let x=xLand2+dx2*i,y=yLand-dy2*(i+1);L(svg,x,y+dy2,x,y,'#2563eb',3);L(svg,x,y,x+dx2,y,'#22c55e',3);}L(svg,xTop,yTop+dy2,xTop,yTop,'#2563eb',3);
+L(svg,x0,ySuelo,x0,ySuelo-dy1,'#ef4444',6);L(svg,x0,ySuelo-dy1,xLand,yLand,'#ef4444',6);L(svg,xLand,yLand,xLand2,yLand,'#ef4444',6);L(svg,xLand2,yLand,xLand2,yLand-dy2,'#ef4444',6);L(svg,xLand2,yLand-dy2,xTop,yTop,'#ef4444',6);
+let cx=x0-42;L(svg,cx,ySuelo,cx,ySuelo-dy1,'#7c3aed',2);L(svg,cx-13,ySuelo,cx+13,ySuelo,'#7c3aed',2);L(svg,cx-13,ySuelo-dy1,cx+13,ySuelo-dy1,'#7c3aed',2);L(svg,cx,ySuelo,x0,ySuelo,'#7c3aed',1.5,'6 6');L(svg,cx,ySuelo-dy1,x0,ySuelo-dy1,'#7c3aed',1.5,'6 6');T(svg,cx-16,ySuelo-dy1/2+4,`${a.c.toFixed(1)} cm`,'#7c3aed',15,'800','end');T(svg,cx-16,ySuelo-dy1/2+22,'contrapaso T1','#7c3aed',11,'700','end');
+let cx2=xLand2+42;L(svg,cx2,yLand,cx2,yLand-dy2,'#7c3aed',2);L(svg,cx2-13,yLand,cx2+13,yLand,'#7c3aed',2);L(svg,cx2-13,yLand-dy2,cx2+13,yLand-dy2,'#7c3aed',2);L(svg,xLand2,yLand,cx2,yLand,'#7c3aed',1.5,'6 6');L(svg,xLand2,yLand-dy2,cx2,yLand-dy2,'#7c3aed',1.5,'6 6');T(svg,cx2+16,yLand-dy2/2+4,`${b.c.toFixed(1)} cm`,'#7c3aed',15,'800','start');T(svg,cx2+16,yLand-dy2/2+22,'contrapaso T2','#7c3aed',11,'700','start');
+let i1=Math.max(1,Math.min(a.huellas-2,Math.floor(a.huellas*.45))),hx=x0+dx1*i1,hy=ySuelo-dy1*(i1+1),yc=hy+46;L(svg,hx,hy,hx,yc,'#16a34a',1.5,'6 6');L(svg,hx+dx1,hy,hx+dx1,yc,'#16a34a',1.5,'6 6');L(svg,hx,yc,hx+dx1,yc,'#16a34a',2.5);T(svg,hx+dx1/2,yc+22,`Huella T1: ${a.h.toFixed(1)} cm`,'#16a34a',14,'800','middle');
+let i2=Math.max(1,Math.min(b.huellas-2,Math.floor(b.huellas*.45))),hx2=xLand2+dx2*i2,hy2=yLand-dy2*(i2+1),yc2=hy2-36;L(svg,hx2,hy2,hx2,yc2,'#16a34a',1.5,'6 6');L(svg,hx2+dx2,hy2,hx2+dx2,yc2,'#16a34a',1.5,'6 6');L(svg,hx2,yc2,hx2+dx2,yc2,'#16a34a',2.5);T(svg,hx2+dx2/2,yc2-10,`Huella T2: ${b.h.toFixed(1)} cm`,'#16a34a',14,'800','middle');
+let ax=xLand-dx1*1.8,ay=yLand+dy1*1.55,r=42,rad=a.ang*Math.PI/180;L(svg,ax,ay,ax+r,ay,'#9333ea',2,'7 6');L(svg,ax,ay,ax+r*Math.cos(-rad),ay+r*Math.sin(-rad),'#9333ea',2,'7 6');svg.innerHTML+=`<path d="M ${ax+r} ${ay} A ${r} ${r} 0 0 0 ${ax+r*Math.cos(-rad)} ${ay+r*Math.sin(-rad)}" fill="none" stroke="#9333ea" stroke-width="3"/>`;T(svg,ax+r+10,ay-10,`${a.ang.toFixed(1)}°`,'#9333ea',16,'800');
+let axb=xTop-dx2*1.8,ayb=yTop+dy2*1.55,rad2=b.ang*Math.PI/180;L(svg,axb,ayb,axb+r,ayb,'#9333ea',2,'7 6');L(svg,axb,ayb,axb+r*Math.cos(-rad2),ayb+r*Math.sin(-rad2),'#9333ea',2,'7 6');svg.innerHTML+=`<path d="M ${axb+r} ${ayb} A ${r} ${r} 0 0 0 ${axb+r*Math.cos(-rad2)} ${ayb+r*Math.sin(-rad2)}" fill="none" stroke="#9333ea" stroke-width="3"/>`;T(svg,axb+r+10,ayb-10,`${b.ang.toFixed(1)}°`,'#9333ea',16,'800');
+let yDim=ySuelo+48;L(svg,x0,ySuelo,x0,yDim,'#9333ea',1.5,'6 6');L(svg,xLand,yLand,xLand,yDim,'#9333ea',1.5,'6 6');L(svg,xLand2,yLand,xLand2,yDim,'#9333ea',1.5,'6 6');L(svg,xTop,yTop,xTop,yDim,'#9333ea',1.5,'6 6');L(svg,x0,yDim,xLand,yDim,'#9333ea',2);L(svg,xLand,yDim,xLand2,yDim,'#9333ea',2);L(svg,xLand2,yDim,xTop,yDim,'#9333ea',2);T(svg,(x0+xLand)/2,yDim+21,`T1: ${a.longUsada.toFixed(2)} m`,'#9333ea',13,'800','middle');T(svg,(xLand+xLand2)/2,yDim+21,`Desc.: ${descM.toFixed(2)} m`,'#9333ea',13,'800','middle');T(svg,(xLand2+xTop)/2,yDim+21,`T2: ${b.longUsada.toFixed(2)} m`,'#9333ea',13,'800','middle');let yTot=yDim+42;L(svg,x0,yTot,xTop,yTot,'#9333ea',2);T(svg,(x0+xTop)/2,yTot+22,`Longitud horizontal total: ${(a.longUsada+descM+b.longUsada).toFixed(2)} m`,'#9333ea',15,'800','middle');
+let xDim=xTop+58;L(svg,xTop,yTop,xDim,yTop,'#9333ea',1.5,'6 6');L(svg,x0,ySuelo,xDim,ySuelo,'#9333ea',1.5,'6 6');L(svg,xLand,yLand,xDim,yLand,'#9333ea',1.5,'6 6');L(svg,xDim,yTop,xDim,ySuelo,'#9333ea',2);T(svg,xDim+14,(yTop+ySuelo)/2,`Altura total: ${hTotal.toFixed(2)} m`,'#9333ea',15,'800','start');let xDim2=x0-75;L(svg,xDim2,ySuelo,xDim2,yLand,'#9333ea',2);L(svg,xDim2,yLand,xLand,yLand,'#9333ea',1.5,'6 6');T(svg,xDim2-12,(yLand+ySuelo)/2,`Altura descanso: ${hDesc.toFixed(2)} m`,'#9333ea',14,'800','end');
+T(svg,x0+25,ySuelo-85,'Tramo 1','#0f2f57',16,'800');T(svg,xLand2+25,yLand-85,'Tramo 2','#0f2f57',16,'800');let ly=625;L(svg,220,ly,270,ly,'#ef4444',5);T(svg,282,ly+5,'Perfil metálico','#334155',13,'700');L(svg,450,ly,500,ly,'#22c55e',5);T(svg,512,ly+5,'Huella','#334155',13,'700');L(svg,625,ly,675,ly,'#2563eb',5);T(svg,687,ly+5,'Contrapaso','#334155',13,'700');}
+function exportarPDF(){if(!seleccion)return;let svg=document.getElementById('dibujo').outerHTML;let linea=document.getElementById('lineaResultado').innerHTML;let titulo=document.getElementById('tituloGrafico').textContent;let nota=document.getElementById('nota').innerHTML;let w=window.open('','_blank');w.document.write(`<!DOCTYPE html><html><head><title>Reporte escalera EMGRISAC</title><style>body{font-family:Arial;margin:22px;color:#1f2937}h1{color:#123760;margin:0 0 4px}.sub{color:#64748b;margin-bottom:18px}.box{border:1px solid #d8dee8;border-radius:14px;padding:14px;margin:12px 0}.line{display:flex;gap:18px;flex-wrap:wrap}.line span{margin-right:14px}svg{width:100%;height:auto;border:1px solid #d8dee8;border-radius:12px}@page{size:A4 landscape;margin:10mm}</style></head><body><h1>EMGRISAC · Calculadora de Escaleras</h1><div class="sub">Reporte preliminar de opción seleccionada</div><div class="box"><h2>${titulo}</h2><div class="line">${linea}</div><p>${nota}</p></div>${svg}<script>window.onload=()=>setTimeout(()=>window.print(),300)<\/script></body></html>`);w.document.close();}
 calcular();
 </script>
 </body>
