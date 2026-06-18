@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portal Técnico EMGRISAC</title>
+  <style>
+    :root {
+      --azul: #314c91;
+      --azul-oscuro: #21386f;
+      --gris: #f3f5f8;
+      --texto: #1f2937;
+      --borde: #d9dee8;
+      --sombra: 0 18px 40px rgba(31, 41, 55, 0.12);
+      --verde: #16a34a;
+      --amarillo: #f59e0b;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, #ffffff 0%, #eef2f8 100%);
+      color: var(--texto);
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 28px 7vw 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      border-bottom: 1px solid var(--borde);
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .logo {
+      height: 68px;
+      max-width: 420px;
+      object-fit: contain;
+    }
+
+    .badge {
+      background: var(--azul);
+      color: white;
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    main { padding: 48px 7vw 70px; }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      align-items: center;
+      gap: 40px;
+      margin-bottom: 34px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(36px, 5vw, 64px);
+      color: var(--azul-oscuro);
+      letter-spacing: -1.5px;
+      line-height: 1.02;
+    }
+
+    .subtitle {
+      margin-top: 18px;
+      font-size: 20px;
+      line-height: 1.55;
+      color: #4b5563;
+      max-width: 760px;
+    }
+
+    .panel, .metric, .card {
+      background: white;
+      border: 1px solid var(--borde);
+      box-shadow: 0 8px 24px rgba(31, 41, 55, 0.07);
+    }
+
+    .panel {
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: var(--sombra);
+    }
+
+    .panel h2, .section-title h2 { margin: 0 0 10px; color: var(--azul); }
+    .panel p, .section-title p { margin: 0; color: #5b6472; line-height: 1.5; }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(180px, 1fr));
+      gap: 18px;
+      margin-bottom: 42px;
+    }
+
+    .metric {
+      border-radius: 22px;
+      padding: 20px;
+      min-height: 132px;
+    }
+
+    .metric-label {
+      color: #6b7280;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      margin-bottom: 10px;
+    }
+
+    .metric-value {
+      color: var(--azul-oscuro);
+      font-size: 28px;
+      font-weight: 900;
+      line-height: 1.1;
+    }
+
+    .metric-note {
+      margin-top: 10px;
+      color: #6b7280;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .section-title {
+      margin: 0 0 20px;
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(190px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      text-decoration: none;
+      color: inherit;
+      border-radius: 24px;
+      padding: 24px;
+      min-height: 225px;
+      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--sombra);
+      border-color: var(--azul);
+    }
+
+    .icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 18px;
+      background: var(--gris);
+      color: var(--azul);
+      display: grid;
+      place-items: center;
+      font-size: 27px;
+      font-weight: 900;
+      margin-bottom: 18px;
+    }
+
+    .card h3 { margin: 0 0 10px; font-size: 20px; color: var(--azul-oscuro); }
+    .card p { margin: 0; color: #5b6472; line-height: 1.45; font-size: 14px; }
+
+    .status {
+      margin-top: 22px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--azul);
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .dot { width: 9px; height: 9px; background: var(--azul); border-radius: 50%; }
+    .dot.green { background: var(--verde); }
+    .dot.yellow { background: var(--amarillo); }
+
+    footer {
+      padding: 24px 7vw;
+      color: #6b7280;
+      border-top: 1px solid var(--borde);
+      background: white;
+      font-size: 14px;
+    }
+
+    @media (max-width: 1200px) {
+      .grid { grid-template-columns: repeat(3, minmax(220px, 1fr)); }
+      .dashboard { grid-template-columns: repeat(2, minmax(180px, 1fr)); }
+    }
+
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; }
+      .grid { grid-template-columns: repeat(2, minmax(220px, 1fr)); }
+    }
+
+    @media (max-width: 640px) {
+      header { flex-direction: column; align-items: flex-start; }
+      .logo { width: 100%; height: auto; }
+      .grid, .dashboard { grid-template-columns: 1fr; }
+      main { padding-top: 34px; }
+      .section-title { display: block; }
+    }
+  </style>
+  <link rel="stylesheet" href="css/emgrisac-unificado.css" />
+  <script src="js/emgrisac-ui.js" defer></script>
+</head>
+<body class="emg-unificado">
+
+<aside class="emg-sidebar">
+  <div class="emg-brand">
+    <img src="img/logo-emgrisac.png" alt="Logo EMGRISAC">
+    <div><strong>EMGRISAC</strong><span>Portal Técnico</span></div>
+  </div>
+  <nav class="emg-nav">
+    <a href="index.html" class="active"><span>🏠</span><span>Portal</span></a>
+<a href="optimizador.html" class=""><span>✂️</span><span>Optimizador</span></a>
+<a href="bocapez.html" class=""><span>🔩</span><span>Boca de pez</span></a>
+<a href="calcpesos.html" class=""><span>⚖️</span><span>Pesos</span></a>
+<a href="calculadora-pintura.html" class=""><span>🎨</span><span>Pintura</span></a>
+<a href="cotizador.html" class=""><span>📋</span><span>Cotizador</span></a>
+<a href="calculadora-escaleras.html" class=""><span>🪜</span><span>Escalera</span></a>
+  </nav>
+  <div class="emg-sidebar-footer">Estructuras Metálicas<br>Herramientas internas v2.0</div>
+</aside>
+<header class="emg-topbar">
+  <div style="display:flex;align-items:center;gap:10px;">
+    <button class="emg-mobile-menu" data-emg-menu>☰</button>
+    <div class="emg-page-title"><strong>Portal Técnico</strong><span>Dashboard principal</span></div>
+  </div>
+  <div class="emg-chip">EMGRISAC Tools</div>
+</header>
+
+  <header>
+    <img src="img/logo-emgrisac.png" alt="Logo EMGRISAC" class="logo" />
+    <div class="badge">Portal Técnico</div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <h1>Portal Técnico EMGRISAC</h1>
+        <p class="subtitle">
+          Herramientas digitales para optimizar procesos de estructuras metálicas:
+          cortes, desarrollos, cálculos técnicos, pintura y cotizaciones internas.
+        </p>
+      </div>
+      <div class="panel">
+        <h2>Acceso rápido</h2>
+        <p>
+          Panel principal para ingresar a las herramientas técnicas de EMGRISAC y revisar datos útiles del día.
+        </p>
+      </div>
+    </section>
+
+    <section class="dashboard">
+      <div class="metric">
+        <div class="metric-label">Fecha y hora</div>
+        <div class="metric-value" id="fechaHora">--:--</div>
+        <div class="metric-note">Actualización automática local.</div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-label">Tipo de cambio</div>
+        <div class="metric-value">S/  - - </div>
+        <div class="metric-note">Valor referencial. Actualízalo manualmente según tu fuente.</div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-label">Días sin accidentes</div>
+        <div class="metric-value">300 días</div>
+        <div class="metric-note"> Indicador SSOMA.</div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-label">Estadísticas EMGRISAC</div>
+        <div class="metric-value">6 herramientas</div>
+        <div class="metric-note">Portal técnico en crecimiento.</div>
+      </div>
+    </section>
+
+    <section class="section-title">
+      <div>
+        <h2>Herramientas</h2>
+        <p>Selecciona una herramienta para empezar.</p>
+      </div>
+    </section>
+
+    <section class="grid">
+      <a class="card" href="optimizador.html">
+        <div>
+          <div class="icon">✂</div>
+          <h3>Optimizador de cortes</h3>
+          <p>Organiza piezas, reduce desperdicio y calcula aprovechamiento de material.</p>
+        </div>
+        <span class="status"><span class="dot green"></span> Entrar</span>
+      </a>
+
+      <a class="card" href="bocapez.html">
+        <div>
+          <div class="icon">⌁</div>
+          <h3>Boca de pez</h3>
+          <p>Genera plantillas para tubos, vista 3D y desarrollo para corte.</p>
+        </div>
+        <span class="status"><span class="dot green"></span> Entrar</span>
+      </a>
+
+      <a class="card" href="calcpesos.html">
+        <div>
+          <div class="icon">㎏</div>
+          <h3>Calculadora de pesos</h3>
+          <p>Calcula pesos de tubos, planchas, perfiles y materiales.</p>
+        </div>
+        <span class="status"><span class="dot green"></span> Entrar</span>
+      </a>
+
+      <a class="card" href="cotizador.html">
+        <div>
+          <div class="icon">S/</div>
+          <h3>Cotizador técnico</h3>
+          <p>Calcula materiales, mano de obra, consumibles, margen y precio final.</p>
+        </div>
+        <span class="status"><span class="dot green"></span> Entrar</span>
+      </a>
+
+      <a class="card" href="calculadora-pintura.html">
+        <div>
+          <div class="icon">▰</div>
+          <h3>Calculadora de pintura</h3>
+          <p>Estima área superficial, manos, pérdida, rendimiento y litros necesarios.</p>
+        </div>
+        <span class="status"><span class="dot green"></span> Entrar</span>
+      </a>
+
+      <a class="card" href="calculadora-escaleras.html">
+        <div>
+          <div class="icon">▴</div>
+          <h3>Calculadora de escalera</h3>
+          <p>Evalúa contrapasos, huellas, Blondel, ángulo y longitud de perfil metálico.</p>
+        </div>
+        <span class="status"><span class="dot green"></span> Entrar</span>
+      </a>
+    </section>
+  </main>
+
+  <footer>
+    © EMGRISAC — Estructuras Metálicas | Portal Técnico interno
+  </footer>
+
+  <script>
+    function actualizarFechaHora() {
+      const ahora = new Date();
+      const opcionesFecha = { weekday: 'short', day: '2-digit', month: 'short' };
+      const fecha = ahora.toLocaleDateString('es-PE', opcionesFecha).replace('.', '');
+      const hora = ahora.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' });
+      document.getElementById('fechaHora').textContent = `${fecha} · ${hora}`;
+    }
+
+    actualizarFechaHora();
+    setInterval(actualizarFechaHora, 30000);
+  </script>
+</body>
+</html>
