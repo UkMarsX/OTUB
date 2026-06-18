@@ -265,7 +265,7 @@
       </div>
 
       <p class="nota">
-        Nota: Las medidas se ingresan en milímetros. El cálculo es referencial y puede variar por tolerancias comerciales del material.
+        Nota: Las medidas se ingresan en milímetros. En tubos, las dimensiones ingresadas son exteriores y el espesor se descuenta hacia el interior. El cálculo es referencial y puede variar por tolerancias comerciales del material.
       </p>
     </div>
 
@@ -308,11 +308,11 @@
     if (perfil.value === "tubo_redondo") {
       html = `
         <div>
-          <label>Diámetro exterior Ø mm</label>
+          <label>Diámetro exterior Ø (De) mm</label>
           <input type="number" id="diametro" value="50" step="0.01">
         </div>
         <div>
-          <label>Espesor mm</label>
+          <label>Espesor de pared mm</label>
           <input type="number" id="espesor" value="2" step="0.01">
         </div>
       `;
@@ -325,7 +325,7 @@
           <input type="number" id="lado" value="50" step="0.01">
         </div>
         <div>
-          <label>Espesor mm</label>
+          <label>Espesor de pared mm</label>
           <input type="number" id="espesor" value="2" step="0.01">
         </div>
       `;
@@ -342,7 +342,7 @@
           <input type="number" id="altura" value="50" step="0.01">
         </div>
         <div>
-          <label>Espesor mm</label>
+          <label>Espesor de pared mm</label>
           <input type="number" id="espesor" value="2" step="0.01">
         </div>
       `;
@@ -355,7 +355,7 @@
           <input type="number" id="ancho" value="1000" step="0.01">
         </div>
         <div>
-          <label>Espesor mm</label>
+          <label>Espesor de pared mm</label>
           <input type="number" id="espesor" value="3" step="0.01">
         </div>
       `;
@@ -386,7 +386,7 @@
           <input type="number" id="lado" value="50" step="0.01">
         </div>
         <div>
-          <label>Espesor mm</label>
+          <label>Espesor de pared mm</label>
           <input type="number" id="espesor" value="3" step="0.01">
         </div>
       `;
@@ -424,28 +424,41 @@
       const D = parseFloat(document.getElementById("diametro")?.value || 50);
       const e = parseFloat(document.getElementById("espesor")?.value || 2);
       const d = Math.max(D - 2 * e, 0);
+      const rExterior = 70;
+      const rInterior = D > 0 ? 70 * d / D : 0;
 
-      contenido += circle(150, 110, 70);
-      contenido += circle(150, 110, 70 * d / D, "#f97316", "none", 2);
-      contenido += line(80, 205, 220, 205);
-      contenido += text(150, 225, `Ø ${D} mm`);
-      contenido += text(150, 25, `Espesor ${e} mm`);
+      contenido += circle(150, 110, rExterior);
+      contenido += circle(150, 110, rInterior, "#f97316", "none", 2);
 
-      texto.innerText = `Tubo redondo Ø${D} x ${e} mm`;
+      // Cota del diámetro EXTERIOR en negro
+      contenido += `<line x1="80" y1="205" x2="220" y2="205" stroke="#111827" stroke-width="2" />`;
+      contenido += text(150, 225, `Ø exterior ${D} mm`);
+
+      // Cota del diámetro INTERIOR en naranja
+      contenido += `<line x1="${150 - rInterior}" y1="110" x2="${150 + rInterior}" y2="110" stroke="#f97316" stroke-width="2" />`;
+      contenido += text(150, 102, `Ø interior ${d.toFixed(2)} mm`, 12);
+
+      contenido += text(150, 25, `Espesor de pared ${e} mm`);
+      contenido += text(150, 42, `se descuenta hacia el interior`, 11);
+
+      texto.innerText = `Tubo redondo: Ø exterior ${D} mm, espesor ${e} mm, Ø interior ${d.toFixed(2)} mm`;
     }
 
     if (perfil.value === "tubo_cuadrado") {
       const L = parseFloat(document.getElementById("lado")?.value || 50);
       const e = parseFloat(document.getElementById("espesor")?.value || 2);
-      const inner = Math.max(140 * (L - 2 * e) / L, 0);
+      const ladoInterior = Math.max(L - 2 * e, 0);
+      const inner = L > 0 ? Math.max(140 * ladoInterior / L, 0) : 0;
 
       contenido += rect(80, 40, 140, 140);
       contenido += rect(150 - inner / 2, 110 - inner / 2, inner, inner, "#f97316", "none", 2);
-      contenido += line(80, 205, 220, 205);
-      contenido += text(150, 225, `${L} mm`);
-      contenido += text(150, 25, `Espesor ${e} mm`);
 
-      texto.innerText = `Tubo cuadrado ${L} x ${L} x ${e} mm`;
+      contenido += `<line x1="80" y1="205" x2="220" y2="205" stroke="#111827" stroke-width="2" />`;
+      contenido += text(150, 225, `lado exterior ${L} mm`);
+      contenido += text(150, 25, `Espesor de pared ${e} mm`);
+      contenido += text(150, 42, `lado interior ${ladoInterior.toFixed(2)} mm`, 11);
+
+      texto.innerText = `Tubo cuadrado: lado exterior ${L} mm, espesor ${e} mm, lado interior ${ladoInterior.toFixed(2)} mm`;
     }
 
     if (perfil.value === "tubo_rectangular") {
@@ -453,20 +466,25 @@
       const H = parseFloat(document.getElementById("altura")?.value || 50);
       const e = parseFloat(document.getElementById("espesor")?.value || 2);
 
+      const baseInterior = Math.max(B - 2 * e, 0);
+      const alturaInterior = Math.max(H - 2 * e, 0);
+
       const maxDim = Math.max(B, H);
       const W = 170 * B / maxDim;
       const HH = 170 * H / maxDim;
 
-      const innerW = Math.max(W * (B - 2 * e) / B, 0);
-      const innerH = Math.max(HH * (H - 2 * e) / H, 0);
+      const innerW = B > 0 ? Math.max(W * baseInterior / B, 0) : 0;
+      const innerH = H > 0 ? Math.max(HH * alturaInterior / H, 0) : 0;
 
       contenido += rect(150 - W / 2, 110 - HH / 2, W, HH);
       contenido += rect(150 - innerW / 2, 110 - innerH / 2, innerW, innerH, "#f97316", "none", 2);
-      contenido += line(150 - W / 2, 205, 150 + W / 2, 205);
-      contenido += text(150, 225, `${B} mm`);
-      contenido += text(150, 25, `${B} x ${H} x ${e} mm`);
 
-      texto.innerText = `Tubo rectangular ${B} x ${H} x ${e} mm`;
+      contenido += `<line x1="${150 - W / 2}" y1="205" x2="${150 + W / 2}" y2="205" stroke="#111827" stroke-width="2" />`;
+      contenido += text(150, 225, `base exterior ${B} mm`);
+      contenido += text(150, 25, `${B} x ${H} x ${e} mm`);
+      contenido += text(150, 42, `interior ${baseInterior.toFixed(2)} x ${alturaInterior.toFixed(2)} mm`, 11);
+
+      texto.innerText = `Tubo rectangular: exterior ${B} x ${H} mm, espesor ${e} mm, interior ${baseInterior.toFixed(2)} x ${alturaInterior.toFixed(2)} mm`;
     }
 
     if (perfil.value === "plancha" || perfil.value === "platina") {
